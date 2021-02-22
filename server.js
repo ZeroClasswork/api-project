@@ -10,3 +10,5 @@ require('./data/courses-db')
 app.listen(port, () => {
   console.log(`App Listening at http://localhost:${port}`)
 })
+
+module.exports = app
