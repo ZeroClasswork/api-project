@@ -14,11 +14,12 @@ Courses - university, department, code, name, description, units, prerequisites,
 ### Setup
 - [x] README.md
 - [x] init package.json
-- [x] express & express-handlebars
+- [x] express
 - [x] env & .gitignore
-- [ ] github repo
-- [ ] MVC setup
-- [ ] mongodb
+- [x] github repo
+- [x] M+C+tests setup
+- [x] server.js
+- [x] mongodb
 
 ### Courses
 - [ ] tests for course endpoints
