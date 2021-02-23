@@ -22,13 +22,13 @@ Courses - university, department, code, name, description, units, prerequisites,
 - [x] mongodb
 
 ### Courses
-- [ ] tests for course endpoints
-- [ ] course model
-- [ ] course CREATE routes
-- [ ] course READ routes
-- [ ] course UPDATE routes
-- [ ] course DESTROY routes
-- [ ] passing course endpoint tests
+- [x] tests for course endpoints
+- [x] course model
+- [x] course CREATE routes
+- [x] course READ routes
+- [x] course UPDATE routes
+- [x] course DESTROY routes
+- [x] passing course endpoint tests
 
 ### Majors
 - [ ] tests for major endpoints

@@ -71,7 +71,7 @@ describe("Courses", function() {
     testCourse.department = "TEST"
     agent
       .put("/courses/TST_101/edit_department")
-      .send(testCourse.department)
+      .send({department: testCourse.department})
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -93,7 +93,6 @@ describe("Courses", function() {
           .catch(function(err) {
             done(err)
           })
-        done()
       })
       .catch(function(err) {
         done(err)
@@ -105,7 +104,7 @@ describe("Courses", function() {
     testCourse.code = "102"
     agent
       .put("/courses/TEST_101/edit_code")
-      .send(testCourse.code)
+      .send({code: testCourse.code})
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -114,7 +113,7 @@ describe("Courses", function() {
         res.body.should.have.property("description").and.to.equal(testCourse.description)
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
-          .get("/courses/TEST_101")
+          .get("/courses/TEST_102")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -127,7 +126,6 @@ describe("Courses", function() {
           .catch(function(err) {
             done(err)
           })
-        done()
       })
       .catch(function(err) {
         done(err)
@@ -138,7 +136,7 @@ describe("Courses", function() {
     testCourse.name = "Testing Lab"
     agent
       .put("/courses/TEST_102/edit_name")
-      .send(testCourse.name)
+      .send({name: testCourse.name})
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -160,7 +158,6 @@ describe("Courses", function() {
           .catch(function(err) {
             done(err)
           })
-        done()
       })
       .catch(function(err) {
         done(err)
@@ -171,7 +168,7 @@ describe("Courses", function() {
     testCourse.description = "Shorter Description"
     agent
       .put("/courses/TEST_102/edit_description")
-      .send(testCourse.description)
+      .send({description: testCourse.description})
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -193,7 +190,6 @@ describe("Courses", function() {
           .catch(function(err) {
             done(err)
           })
-        done()
       })
       .catch(function(err) {
         done(err)
@@ -204,7 +200,7 @@ describe("Courses", function() {
     testCourse.units = "5"
     agent
       .put("/courses/TEST_102/edit_units")
-      .send(testCourse.units)
+      .send({units: testCourse.units})
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -226,7 +222,6 @@ describe("Courses", function() {
           .catch(function(err) {
             done(err)
           })
-        done()
       })
       .catch(function(err) {
         done(err)
@@ -269,33 +264,22 @@ describe("Courses", function() {
           .catch(function(err) {
             done(err)
           })
-        done()
       })
       .catch(function(err) {
         done(err)
       })
   })
 
-  it("should delete course with valid attributes at DELETE /courses/TST_101/delete", function(done) {
+  it("should delete course at DELETE /courses/TST_101/delete", function(done) {
     Course.estimatedDocumentCount()
       .then(function(initialDocCount) {
         agent
-          .post("/courses/TST_101/delete")
-          .send(testCourse)
-          .then(function (res) {
+          .delete("/courses/TST_101/delete")
+          .then(function(res) {
+            expect(res).to.have.status(200)
             Course.estimatedDocumentCount()
               .then(function(newDocCount) {
-                expect(res).to.have.status(200)
                 expect(newDocCount).to.be.equal(initialDocCount - 1)
-                agent
-                  .get("/courses/TST_101")
-                  .then(function(res) {
-                    expect(res.to.have.status(404))
-                    done()
-                  })
-                  .catch(function(err) {
-                    done(err)
-                  })
                 done()
               })
               .catch(function(err) {

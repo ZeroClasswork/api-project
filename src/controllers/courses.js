@@ -17,7 +17,7 @@ module.exports = app => {
   })
 
   // READ COURSE
-  app.get("/courses/:courseSlug", function(req, res) {
+  app.get("/courses/:courseSlug", (req, res) => {
     var courseSlug = req.params.courseSlug
     var slugSplit = courseSlug.split("_")
     Course.findOne({department: slugSplit[0], code: slugSplit[1]})
@@ -29,5 +29,113 @@ module.exports = app => {
       })
   })
 
+  // UPDATE COURSE
+  app.put("/courses/:courseSlug/edit_department", (req, res) => {
+    var courseSlug = req.params.courseSlug
+    var slugSplit = courseSlug.split("_")
+    Course.findOneAndUpdate(
+      {department: slugSplit[0], code: slugSplit[1]},
+      req.body,
+      {new: true}
+    )
+      .then((course) => {
+        return res.json(course)
+      })
+      .catch((err) => {
+        return res.sendStatus(400)
+      })
+  })
 
+  app.put("/courses/:courseSlug/edit_code", (req, res) => {
+    var courseSlug = req.params.courseSlug
+    var slugSplit = courseSlug.split("_")
+    Course.findOneAndUpdate(
+      {department: slugSplit[0], code: slugSplit[1]},
+      req.body,
+      {new: true}
+    )
+      .then((course) => {
+        return res.json(course)
+      })
+      .catch((err) => {
+        return res.sendStatus(400)
+      })
+  })
+
+  app.put("/courses/:courseSlug/edit_name", (req, res) => {
+    var courseSlug = req.params.courseSlug
+    var slugSplit = courseSlug.split("_")
+    Course.findOneAndUpdate(
+      {department: slugSplit[0], code: slugSplit[1]},
+      req.body,
+      {new: true}
+    )
+      .then((course) => {
+        return res.json(course)
+      })
+      .catch((err) => {
+        return res.sendStatus(400)
+      })
+  })
+
+  app.put("/courses/:courseSlug/edit_description", (req, res) => {
+    var courseSlug = req.params.courseSlug
+    var slugSplit = courseSlug.split("_")
+    Course.findOneAndUpdate(
+      {department: slugSplit[0], code: slugSplit[1]},
+      req.body,
+      {new: true}
+    )
+      .then((course) => {
+        return res.json(course)
+      })
+      .catch((err) => {
+        return res.sendStatus(400)
+      })
+  })
+
+  app.put("/courses/:courseSlug/edit_units", (req, res) => {
+    var courseSlug = req.params.courseSlug
+    var slugSplit = courseSlug.split("_")
+    Course.findOneAndUpdate(
+      {department: slugSplit[0], code: slugSplit[1]},
+      req.body,
+      {new: true}
+    )
+      .then((course) => {
+        return res.json(course)
+      })
+      .catch((err) => {
+        return res.sendStatus(400)
+      })
+  })
+
+  app.put("/courses/:courseSlug/edit_course", (req, res) => {
+    var courseSlug = req.params.courseSlug
+    var slugSplit = courseSlug.split("_")
+    Course.findOneAndUpdate(
+      {department: slugSplit[0], code: slugSplit[1]},
+      req.body,
+      {new: true}
+    )
+      .then((course) => {
+        return res.json(course)
+      })
+      .catch((err) => {
+        return res.sendStatus(400)
+      })
+  })
+
+  // DELETE COURSE
+  app.delete("/courses/:courseSlug/delete", (req, res) => {
+    var courseSlug = req.params.courseSlug
+    var slugSplit = courseSlug.split("_")
+    Course.findOneAndDelete({department: slugSplit[0], code: slugSplit[1]}, (err) => {
+      if (err) {
+        return res.sendStatus(404)
+      } else {
+        return res.sendStatus(200)
+      }
+    })
+  })
 }
