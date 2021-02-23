@@ -3,7 +3,7 @@ const chai = require("chai")
 const chaiHttp = require("chai-http")
 const expect = chai.expect
 
-const Course = require("../models/course")
+const Course = require("../src/models/course")
 
 chai.should()
 chai.use(chaiHttp)
@@ -11,7 +11,7 @@ chai.use(chaiHttp)
 describe("Courses", function() {
   const agent = chai.request.agent(app)
   // Course for Tests
-  const testCourse = {
+  let testCourse = {
     department: "TST",
     code: "101",
     name: "Introduction to Testing",
@@ -29,10 +29,12 @@ describe("Courses", function() {
           .post("/courses/new")
           .send(testCourse)
           .then(function (res) {
+            console.log(res.body)
+            res.status.should.equal(200)
+            res.body.should.be.a("Object")
             Course.estimatedDocumentCount()
               .then(function(newDocCount) {
-                expect(res.to.have.status(200))
-                expect(newDocCount).to.be.equal(initialDocCount + 1)
+                newDocCount.should.be.equal(initialDocCount + 1)
                 done()
               })
               .catch(function(err) {
@@ -48,16 +50,16 @@ describe("Courses", function() {
       })
   })
 
-  it("should receive course attributes at GET /courses/TST101", function(done) {
+  it("should receive course attributes at GET /courses/TST_101", function(done) {
     agent
-      .get("/courses/TST101")
+      .get("/courses/TST_101")
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
         res.body.should.have.property("code").and.to.equal(testCourse.code)
         res.body.should.have.property("name").and.to.equal(testCourse.name)
         res.body.should.have.property("description").and.to.equal(testCourse.description)
-        res.body.should.have.property("units").and.to.equal(testCourse.units)
+        res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         done()
       })
       .catch(function(err) {
@@ -65,10 +67,10 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PUT /courses/TST101/edit_department", function(done) {
+  it("should update course attributes at PUT /courses/TST_101/edit_department", function(done) {
     testCourse.department = "TEST"
     agent
-      .put("/courses/TST101/edit_department")
+      .put("/courses/TST_101/edit_department")
       .send(testCourse.department)
       .then(function(res) {
         res.status.should.equal(200)
@@ -76,16 +78,16 @@ describe("Courses", function() {
         res.body.should.have.property("code").and.to.equal(testCourse.code)
         res.body.should.have.property("name").and.to.equal(testCourse.name)
         res.body.should.have.property("description").and.to.equal(testCourse.description)
-        res.body.should.have.property("units").and.to.equal(testCourse.units)
+        res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
-          .get("/courses/TEST101")
+          .get("/courses/TEST_101")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
             res.body.should.have.property("code").and.to.equal(testCourse.code)
             res.body.should.have.property("name").and.to.equal(testCourse.name)
             res.body.should.have.property("description").and.to.equal(testCourse.description)
-            res.body.should.have.property("units").and.to.equal(testCourse.units)
+            res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
             done()
           })
           .catch(function(err) {
@@ -99,10 +101,10 @@ describe("Courses", function() {
   })
 
 
-  it("should update course attributes at PUT /courses/TEST101/edit_code", function(done) {
+  it("should update course attributes at PUT /courses/TEST_101/edit_code", function(done) {
     testCourse.code = "102"
     agent
-      .put("/courses/TEST101/edit_code")
+      .put("/courses/TEST_101/edit_code")
       .send(testCourse.code)
       .then(function(res) {
         res.status.should.equal(200)
@@ -110,16 +112,16 @@ describe("Courses", function() {
         res.body.should.have.property("code").and.to.equal(testCourse.code)
         res.body.should.have.property("name").and.to.equal(testCourse.name)
         res.body.should.have.property("description").and.to.equal(testCourse.description)
-        res.body.should.have.property("units").and.to.equal(testCourse.units)
+        res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
-          .get("/courses/TEST101")
+          .get("/courses/TEST_101")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
             res.body.should.have.property("code").and.to.equal(testCourse.code)
             res.body.should.have.property("name").and.to.equal(testCourse.name)
             res.body.should.have.property("description").and.to.equal(testCourse.description)
-            res.body.should.have.property("units").and.to.equal(testCourse.units)
+            res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
             done()
           })
           .catch(function(err) {
@@ -132,10 +134,10 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PUT /courses/TEST102/edit_name", function(done) {
+  it("should update course attributes at PUT /courses/TEST_102/edit_name", function(done) {
     testCourse.name = "Testing Lab"
     agent
-      .put("/courses/TEST102/edit_name")
+      .put("/courses/TEST_102/edit_name")
       .send(testCourse.name)
       .then(function(res) {
         res.status.should.equal(200)
@@ -143,16 +145,16 @@ describe("Courses", function() {
         res.body.should.have.property("code").and.to.equal(testCourse.code)
         res.body.should.have.property("name").and.to.equal(testCourse.name)
         res.body.should.have.property("description").and.to.equal(testCourse.description)
-        res.body.should.have.property("units").and.to.equal(testCourse.units)
+        res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
-          .get("/courses/TEST102")
+          .get("/courses/TEST_102")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
             res.body.should.have.property("code").and.to.equal(testCourse.code)
             res.body.should.have.property("name").and.to.equal(testCourse.name)
             res.body.should.have.property("description").and.to.equal(testCourse.description)
-            res.body.should.have.property("units").and.to.equal(testCourse.units)
+            res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
             done()
           })
           .catch(function(err) {
@@ -165,10 +167,10 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PUT /courses/TEST102/edit_description", function(done) {
+  it("should update course attributes at PUT /courses/TEST_102/edit_description", function(done) {
     testCourse.description = "Shorter Description"
     agent
-      .put("/courses/TEST102/edit_description")
+      .put("/courses/TEST_102/edit_description")
       .send(testCourse.description)
       .then(function(res) {
         res.status.should.equal(200)
@@ -176,16 +178,16 @@ describe("Courses", function() {
         res.body.should.have.property("code").and.to.equal(testCourse.code)
         res.body.should.have.property("name").and.to.equal(testCourse.name)
         res.body.should.have.property("description").and.to.equal(testCourse.description)
-        res.body.should.have.property("units").and.to.equal(testCourse.units)
+        res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
-          .get("/courses/TEST102")
+          .get("/courses/TEST_102")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
             res.body.should.have.property("code").and.to.equal(testCourse.code)
             res.body.should.have.property("name").and.to.equal(testCourse.name)
             res.body.should.have.property("description").and.to.equal(testCourse.description)
-            res.body.should.have.property("units").and.to.equal(testCourse.units)
+            res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
             done()
           })
           .catch(function(err) {
@@ -198,10 +200,10 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PUT /courses/TEST102/edit_units", function(done) {
-    testCourse.units = 5
+  it("should update course attributes at PUT /courses/TEST_102/edit_units", function(done) {
+    testCourse.units = "5"
     agent
-      .put("/courses/TEST102/edit_units")
+      .put("/courses/TEST_102/edit_units")
       .send(testCourse.units)
       .then(function(res) {
         res.status.should.equal(200)
@@ -209,16 +211,16 @@ describe("Courses", function() {
         res.body.should.have.property("code").and.to.equal(testCourse.code)
         res.body.should.have.property("name").and.to.equal(testCourse.name)
         res.body.should.have.property("description").and.to.equal(testCourse.description)
-        res.body.should.have.property("units").and.to.equal(testCourse.units)
+        res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
-          .get("/courses/TEST102")
+          .get("/courses/TEST_102")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
             res.body.should.have.property("code").and.to.equal(testCourse.code)
             res.body.should.have.property("name").and.to.equal(testCourse.name)
             res.body.should.have.property("description").and.to.equal(testCourse.description)
-            res.body.should.have.property("units").and.to.equal(testCourse.units)
+            res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
             done()
           })
           .catch(function(err) {
@@ -231,7 +233,7 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PUT /courses/TEST102/edit_course", function(done) {
+  it("should update course attributes at PUT /courses/TEST_102/edit_course", function(done) {
     testCourse = {
       department: "TST",
       code: "101",
@@ -244,7 +246,7 @@ describe("Courses", function() {
     }
 
     agent
-      .put("/courses/TEST102/edit_course")
+      .put("/courses/TEST_102/edit_course")
       .send(testCourse)
       .then(function(res) {
         res.status.should.equal(200)
@@ -252,16 +254,16 @@ describe("Courses", function() {
         res.body.should.have.property("code").and.to.equal(testCourse.code)
         res.body.should.have.property("name").and.to.equal(testCourse.name)
         res.body.should.have.property("description").and.to.equal(testCourse.description)
-        res.body.should.have.property("units").and.to.equal(testCourse.units)
+        res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
-          .get("/courses/TST101")
+          .get("/courses/TST_101")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
             res.body.should.have.property("code").and.to.equal(testCourse.code)
             res.body.should.have.property("name").and.to.equal(testCourse.name)
             res.body.should.have.property("description").and.to.equal(testCourse.description)
-            res.body.should.have.property("units").and.to.equal(testCourse.units)
+            res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
             done()
           })
           .catch(function(err) {
@@ -274,19 +276,19 @@ describe("Courses", function() {
       })
   })
 
-  it("should delete course with valid attributes at DELETE /courses/TST101/delete", function(done) {
+  it("should delete course with valid attributes at DELETE /courses/TST_101/delete", function(done) {
     Course.estimatedDocumentCount()
       .then(function(initialDocCount) {
         agent
-          .post("/courses/TST101/delete")
+          .post("/courses/TST_101/delete")
           .send(testCourse)
           .then(function (res) {
             Course.estimatedDocumentCount()
               .then(function(newDocCount) {
-                expect(res.to.have.status(200))
+                expect(res).to.have.status(200)
                 expect(newDocCount).to.be.equal(initialDocCount - 1)
                 agent
-                  .get("/courses/TST101")
+                  .get("/courses/TST_101")
                   .then(function(res) {
                     expect(res.to.have.status(404))
                     done()

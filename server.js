@@ -5,7 +5,17 @@ require("dotenv").config()
 const app = express()
 const port = process.env.PORT || 3000
 
-require('./data/courses-db')
+const bodyParser = require('body-parser')
+const expressValidator = require('express-validator')
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+
+app.use(expressValidator())
+
+require("./data/courses-db")
+
+require("./src/controllers/courses")(app)
 
 app.listen(port, () => {
   console.log(`App Listening at http://localhost:${port}`)
