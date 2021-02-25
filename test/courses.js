@@ -1,7 +1,6 @@
 const app = require("../server")
 const chai = require("chai")
 const chaiHttp = require("chai-http")
-const expect = chai.expect
 
 const Course = require("../src/models/course")
 
@@ -29,7 +28,6 @@ describe("Courses", function() {
           .post("/courses/new")
           .send(testCourse)
           .then(function (res) {
-            console.log(res.body)
             res.status.should.equal(200)
             res.body.should.be.a("Object")
             Course.estimatedDocumentCount()
@@ -67,10 +65,10 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PUT /courses/TST_101/edit_department", function(done) {
+  it("should update course attributes at PATCH /courses/TST_101/edit_department", function(done) {
     testCourse.department = "TEST"
     agent
-      .put("/courses/TST_101/edit_department")
+      .patch("/courses/TST_101/edit_department")
       .send({department: testCourse.department})
       .then(function(res) {
         res.status.should.equal(200)
@@ -100,10 +98,10 @@ describe("Courses", function() {
   })
 
 
-  it("should update course attributes at PUT /courses/TEST_101/edit_code", function(done) {
+  it("should update course attributes at PATCH /courses/TEST_101/edit_code", function(done) {
     testCourse.code = "102"
     agent
-      .put("/courses/TEST_101/edit_code")
+      .patch("/courses/TEST_101/edit_code")
       .send({code: testCourse.code})
       .then(function(res) {
         res.status.should.equal(200)
@@ -132,10 +130,10 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PUT /courses/TEST_102/edit_name", function(done) {
+  it("should update course attributes at PATCH /courses/TEST_102/edit_name", function(done) {
     testCourse.name = "Testing Lab"
     agent
-      .put("/courses/TEST_102/edit_name")
+      .patch("/courses/TEST_102/edit_name")
       .send({name: testCourse.name})
       .then(function(res) {
         res.status.should.equal(200)
@@ -164,10 +162,10 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PUT /courses/TEST_102/edit_description", function(done) {
+  it("should update course attributes at PATCH /courses/TEST_102/edit_description", function(done) {
     testCourse.description = "Shorter Description"
     agent
-      .put("/courses/TEST_102/edit_description")
+      .patch("/courses/TEST_102/edit_description")
       .send({description: testCourse.description})
       .then(function(res) {
         res.status.should.equal(200)
@@ -196,10 +194,10 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PUT /courses/TEST_102/edit_units", function(done) {
+  it("should update course attributes at PATCH /courses/TEST_102/edit_units", function(done) {
     testCourse.units = "5"
     agent
-      .put("/courses/TEST_102/edit_units")
+      .patch("/courses/TEST_102/edit_units")
       .send({units: testCourse.units})
       .then(function(res) {
         res.status.should.equal(200)
@@ -228,7 +226,7 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PUT /courses/TEST_102/edit_course", function(done) {
+  it("should update course attributes at PUT /courses/TEST_102", function(done) {
     testCourse = {
       department: "TST",
       code: "101",
@@ -270,16 +268,16 @@ describe("Courses", function() {
       })
   })
 
-  it("should delete course at DELETE /courses/TST_101/delete", function(done) {
+  it("should delete course at DELETE /courses/TST_101", function(done) {
     Course.estimatedDocumentCount()
       .then(function(initialDocCount) {
         agent
-          .delete("/courses/TST_101/delete")
+          .delete("/courses/TST_101")
           .then(function(res) {
-            expect(res).to.have.status(200)
+            res.should.have.status(200)
             Course.estimatedDocumentCount()
               .then(function(newDocCount) {
-                expect(newDocCount).to.be.equal(initialDocCount - 1)
+                newDocCount.should.be.equal(initialDocCount - 1)
                 done()
               })
               .catch(function(err) {

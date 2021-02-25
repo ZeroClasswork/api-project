@@ -30,7 +30,7 @@ module.exports = app => {
   })
 
   // UPDATE COURSE
-  app.put("/courses/:courseSlug/edit_department", (req, res) => {
+  app.patch("/courses/:courseSlug/edit_department", (req, res) => {
     var courseSlug = req.params.courseSlug
     var slugSplit = courseSlug.split("_")
     Course.findOneAndUpdate(
@@ -46,7 +46,7 @@ module.exports = app => {
       })
   })
 
-  app.put("/courses/:courseSlug/edit_code", (req, res) => {
+  app.patch("/courses/:courseSlug/edit_code", (req, res) => {
     var courseSlug = req.params.courseSlug
     var slugSplit = courseSlug.split("_")
     Course.findOneAndUpdate(
@@ -62,7 +62,7 @@ module.exports = app => {
       })
   })
 
-  app.put("/courses/:courseSlug/edit_name", (req, res) => {
+  app.patch("/courses/:courseSlug/edit_name", (req, res) => {
     var courseSlug = req.params.courseSlug
     var slugSplit = courseSlug.split("_")
     Course.findOneAndUpdate(
@@ -78,7 +78,7 @@ module.exports = app => {
       })
   })
 
-  app.put("/courses/:courseSlug/edit_description", (req, res) => {
+  app.patch("/courses/:courseSlug/edit_description", (req, res) => {
     var courseSlug = req.params.courseSlug
     var slugSplit = courseSlug.split("_")
     Course.findOneAndUpdate(
@@ -94,7 +94,7 @@ module.exports = app => {
       })
   })
 
-  app.put("/courses/:courseSlug/edit_units", (req, res) => {
+  app.patch("/courses/:courseSlug/edit_units", (req, res) => {
     var courseSlug = req.params.courseSlug
     var slugSplit = courseSlug.split("_")
     Course.findOneAndUpdate(
@@ -110,7 +110,7 @@ module.exports = app => {
       })
   })
 
-  app.put("/courses/:courseSlug/edit_course", (req, res) => {
+  app.put("/courses/:courseSlug", (req, res) => {
     var courseSlug = req.params.courseSlug
     var slugSplit = courseSlug.split("_")
     Course.findOneAndUpdate(
@@ -127,7 +127,7 @@ module.exports = app => {
   })
 
   // DELETE COURSE
-  app.delete("/courses/:courseSlug/delete", (req, res) => {
+  app.delete("/courses/:courseSlug", (req, res) => {
     var courseSlug = req.params.courseSlug
     var slugSplit = courseSlug.split("_")
     Course.findOneAndDelete({department: slugSplit[0], code: slugSplit[1]}, (err) => {

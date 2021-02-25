@@ -11,7 +11,7 @@ mongoose.connect(
     console.log("Connected successfully to database")
 
     // turn on following for testing
-    // db.close()
+    db.close()
   }
 )
 mongoose.connection.on("error", console.error.bind(console, "MongoDB connection Error: "))
