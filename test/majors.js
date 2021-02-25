@@ -108,8 +108,8 @@ describe("Majors", function() {
       })
   })
 
-  it("should add course to major at POST /majors/BS_Test/add_course")
-  it("should remove course to major at DELETE /majors/BS_Test/add_course")
+  // it("should add course to major at POST /majors/BS_Test/add_course")
+  // it("should remove course to major at DELETE /majors/BS_Test/add_course")
 
   it("should update major attributes at PUT /majors/BS_Test", function(done) {
     testMajor = {

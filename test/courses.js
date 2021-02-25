@@ -239,7 +239,7 @@ describe("Courses", function() {
     }
 
     agent
-      .put("/courses/TEST_102/edit_course")
+      .put("/courses/TEST_102")
       .send(testCourse)
       .then(function(res) {
         res.status.should.equal(200)
