@@ -16,6 +16,7 @@ app.use(expressValidator())
 require("./data/courses-db")
 
 require("./src/controllers/courses")(app)
+require("./src/controllers/majors")(app)
 
 app.listen(port, () => {
   console.log(`App Listening at http://localhost:${port}`)

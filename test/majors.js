@@ -24,7 +24,7 @@ describe("Majors", function() {
           .then(function (res) {
             res.status.should.equal(200)
             res.body.should.be.a("Object")
-            Course.estimatedDocumentCount()
+            Major.estimatedDocumentCount()
               .then(function(newDocCount) {
                 newDocCount.should.be.equal(initialDocCount + 1)
                 done()
@@ -59,14 +59,14 @@ describe("Majors", function() {
   it("should update major type at PATCH /majors/BS_Test/edit_type", function(done) {
     testMajor.type = "BA"
     agent
-      .patch("/courses/BS_Test/edit_type")
+      .patch("/majors/BS_Test/edit_type")
       .send({type: testMajor.type})
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("type").and.to.equal(testMajor.type)
         res.body.should.have.property("name").and.to.equal(testMajor.name)
         agent
-          .get("/courses/BA_Test")
+          .get("/majors/BA_Test")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -85,14 +85,14 @@ describe("Majors", function() {
   it("should update major name at PATCH /majors/BS_Test/edit_name", function(done) {
     testMajor.name = "test"
     agent
-      .patch("/courses/BA_Test/edit_type")
+      .patch("/majors/BA_Test/edit_type")
       .send({name: testMajor.name})
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("type").and.to.equal(testMajor.type)
         res.body.should.have.property("name").and.to.equal(testMajor.name)
         agent
-          .get("/courses/BA_test")
+          .get("/majors/BA_test")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -117,14 +117,14 @@ describe("Majors", function() {
       name: "Test"
     }
     agent
-      .put("/courses/BA_test")
+      .put("/majors/BA_test")
       .send(testMajor)
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("type").and.to.equal(testMajor.type)
         res.body.should.have.property("name").and.to.equal(testMajor.name)
         agent
-          .get("/courses/BS_Test")
+          .get("/majors/BS_Test")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -163,5 +163,9 @@ describe("Majors", function() {
       .catch(function(err) {
         done(err)
       })
+  })
+
+  after(function() {
+    Major.findOneAndDelete(testMajor)
   })
 })
