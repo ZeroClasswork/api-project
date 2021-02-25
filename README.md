@@ -29,15 +29,19 @@ Courses - university, department, code, name, description, units, prerequisites,
 - [x] course UPDATE routes
 - [x] course DESTROY routes
 - [x] passing course endpoint tests
+- [ ] tests for course course associations
+- [ ] passing tests for course course associations
 
 ### Majors
-- [ ] tests for major endpoints
-- [ ] major model
-- [ ] major CREATE routes
-- [ ] major READ routes
-- [ ] major UPDATE routes
-- [ ] major DESTROY routes
-- [ ] passing major endpoint tests
+- [x] tests for major endpoints
+- [x] major model
+- [x] major CREATE routes
+- [x] major READ routes
+- [x] major UPDATE routes
+- [x] major DESTROY routes
+- [x] passing major endpoint tests
+- [ ] tests for major course associations
+- [ ] passing tests for major course associations
 
 ### Universities
 - [ ] tests for university endpoints
