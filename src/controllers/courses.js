@@ -1,3 +1,4 @@
+const course = require("../models/course")
 const Course = require("../models/course")
 
 module.exports = app => {
@@ -122,6 +123,41 @@ module.exports = app => {
         return res.json(course)
       })
       .catch((err) => {
+        return res.sendStatus(400)
+      })
+  })
+
+  // CHANGE COURSE-COURSE ASSOCIATIONS
+  app.patch("/courses/:courseOneSlug/add_prerequisite/:courseTwoSlug", (req, res) => {
+    var courseOneSlug = req.params.courseOneSlug
+    var courseTwoSlug = req.params.courseTwoSlug
+    var slugOneSplit = courseOneSlug.split("_")
+    var slugTwoSplit = courseTwoSlug.split("_")
+
+    Course.findOne(
+      {department: slugOneSplit[0], code: slugOneSplit[1]},
+    )
+      .then((courseOne) => {
+        Course.findOne(
+          {department: slugTwoSplit[0], code: slugTwoSplit[1]},
+        )
+          .then((courseTwo) => {
+            courseOne.prerequisites.push(courseTwo)
+            courseTwo.postrequisites.push(courseOne)
+            courseOne.save()
+            courseTwo.save()
+            return courseOne
+          })
+          .then((courseOne) => {
+            return res.json(courseOne)
+          })
+          .catch((err) => {
+            console.log(err)
+            return res.sendStatus(400)
+          })
+      })
+      .catch((err) => {
+        console.log(err)
         return res.sendStatus(400)
       })
   })

@@ -78,7 +78,7 @@ module.exports = app => {
       })
   })
 
-  // DELETE COURSE
+  // DELETE MAJOR
   app.delete("/majors/:majorSlug", (req, res) => {
     var majorSlug = req.params.majorSlug
     var slugSplit = majorSlug.split("_")

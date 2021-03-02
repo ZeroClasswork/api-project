@@ -7,9 +7,9 @@ const CourseSchema = new Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
   units: { type: Number, required: true },
-  prerequisite: [{ type: Schema.Types.ObjectId, ref: "Course" }],
-  corequisite: [{ type: Schema.Types.ObjectId, ref: "Course" }],
-  postrequisite: [{ type: Schema.Types.ObjectId, ref: "Course" }],
+  prerequisites: [{ type: Schema.Types.ObjectId, ref: "Course" }],
+  corequisites: [{ type: Schema.Types.ObjectId, ref: "Course" }],
+  postrequisites: [{ type: Schema.Types.ObjectId, ref: "Course" }],
 })
 
 module.exports = mongoose.model("Course", CourseSchema)
