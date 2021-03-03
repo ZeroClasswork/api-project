@@ -40,7 +40,7 @@ Courses - university, department, code, name, description, units, prerequisites,
 - [x] major UPDATE routes
 - [x] major DESTROY routes
 - [x] passing major endpoint tests
-- [ ] tests for major course associations
+- [x] tests for major course associations
 - [ ] passing tests for major course associations
 
 ### Universities
