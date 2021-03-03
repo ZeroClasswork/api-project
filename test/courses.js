@@ -27,12 +27,12 @@ describe("Courses", function() {
   }
 
   before(function() {
-    Course.deleteMany(testCourse)
-    Course.deleteMany(secondCourse)
-
     const course = new Course(secondCourse)
 
     course.save()
+
+    Course.deleteMany(testCourse)
+    Course.deleteMany(secondCourse)
   })
 
   it("should create course with valid attributes at POST /courses/new", function(done) {

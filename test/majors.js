@@ -170,7 +170,7 @@ describe("Majors", function() {
     })
   })
 
-  it("should add course to major at PATCH /majors/BS_Test/delete_course_requirement/TST_101", function(done) {
+  it("should delete course to major at PATCH /majors/BS_Test/delete_course_requirement/TST_101", function(done) {
     agent
       .patch("/majors/BS_Test/delete_course_requirement/TST_101")
       .then(function(res) {
