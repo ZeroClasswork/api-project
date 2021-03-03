@@ -141,8 +141,8 @@ module.exports = app => {
         courseTwo = await Course.findOne(
           {department: slugTwoSplit[0], code: slugTwoSplit[1]},
         )
-        courseOne.prerequisites.push(courseTwo._id)
-        courseTwo.postrequisites.push(courseOne._id)
+        courseOne.prerequisites.unshift(courseTwo._id)
+        courseTwo.postrequisites.unshift(courseOne._id)
         courseOne.save()
         courseTwo.save()
         return courseOne
@@ -151,12 +151,11 @@ module.exports = app => {
         return res.json(courseOne)
       })
       .catch((err) => {
-        console.log(3, err)
         return res.sendStatus(400)
       })
   })
 
-  app.patch("/courses/:courseOneSlug/delete_prerequisite/:courseTwoSlug", (req, res) => {
+  app.patch("/courses/:courseOneSlug/delete_prerequisite/:courseTwoSlug", async (req, res) => {
     var courseOneSlug = req.params.courseOneSlug
     var courseTwoSlug = req.params.courseTwoSlug
     var slugOneSplit = courseOneSlug.split("_")
@@ -165,14 +164,12 @@ module.exports = app => {
     Course.findOne(
       {department: slugOneSplit[0], code: slugOneSplit[1]},
     )
-      .then((courseOne) => {
-        return (courseOne, Course.findOne(
+      .then(async (courseOne) => {
+        courseTwo = await Course.findOne(
           {department: slugTwoSplit[0], code: slugTwoSplit[1]},
-        ))
-      })
-      .then((courseOne, courseTwo) => {
-        courseOne.prerequisites.unshift(courseTwo)
-        courseTwo.postrequisites.unshift(courseOne)
+        )
+        courseOne.prerequisites.remove(courseTwo._id)
+        courseTwo.postrequisites.remove(courseOne._id)
         courseOne.save()
         courseTwo.save()
         return courseOne
@@ -181,11 +178,11 @@ module.exports = app => {
         return res.json(courseOne)
       })
       .catch((err) => {
-        return res.status(400)
+        return res.sendStatus(400)
       })
   })
 
-  app.patch("/courses/:courseOneSlug/add_corequisite/:courseTwoSlug", (req, res) => {
+  app.patch("/courses/:courseOneSlug/add_corequisite/:courseTwoSlug", async (req, res) => {
     var courseOneSlug = req.params.courseOneSlug
     var courseTwoSlug = req.params.courseTwoSlug
     var slugOneSplit = courseOneSlug.split("_")
@@ -194,13 +191,11 @@ module.exports = app => {
     Course.findOne(
       {department: slugOneSplit[0], code: slugOneSplit[1]},
     )
-      .then((courseOne) => {
-        return (courseOne, Course.findOne(
+      .then(async (courseOne) => {
+        courseTwo = await Course.findOne(
           {department: slugTwoSplit[0], code: slugTwoSplit[1]},
-        ))
-      })
-      .then((courseOne, courseTwo) => {
-        courseOne.corequisites.push(courseTwo)
+        )
+        courseOne.corequisites.unshift(courseTwo._id)
         courseOne.save()
         return courseOne
       })
@@ -208,11 +203,11 @@ module.exports = app => {
         return res.json(courseOne)
       })
       .catch((err) => {
-        return res.status(400)
+        return res.sendStatus(400)
       })
   })
 
-  app.patch("/courses/:courseOneSlug/delete_corequisite/:courseTwoSlug", (req, res) => {
+  app.patch("/courses/:courseOneSlug/delete_corequisite/:courseTwoSlug", async (req, res) => {
     var courseOneSlug = req.params.courseOneSlug
     var courseTwoSlug = req.params.courseTwoSlug
     var slugOneSplit = courseOneSlug.split("_")
@@ -221,13 +216,11 @@ module.exports = app => {
     Course.findOne(
       {department: slugOneSplit[0], code: slugOneSplit[1]},
     )
-      .then((courseOne) => {
-        return (courseOne, Course.findOne(
+      .then(async (courseOne) => {
+        courseTwo = await Course.findOne(
           {department: slugTwoSplit[0], code: slugTwoSplit[1]},
-        ))
-      })
-      .then((courseOne, courseTwo) => {
-        courseOne.corequisites.unshift(courseTwo)
+        )
+        courseOne.corequisites.remove(courseTwo._id)
         courseOne.save()
         return courseOne
       })
@@ -235,7 +228,7 @@ module.exports = app => {
         return res.json(courseOne)
       })
       .catch((err) => {
-        return res.status(400)
+        return res.sendStatus(400)
       })
   })
 

@@ -15,6 +15,10 @@ describe("Majors", function() {
     name: "Test"
   }
 
+  before(function() {
+    Major.deleteMany(testMajor)
+  })
+
   it("should create new major with valid attributes at POST /majors/new", function(done) {
     Major.estimatedDocumentCount()
       .then(function(initialDocCount) {
