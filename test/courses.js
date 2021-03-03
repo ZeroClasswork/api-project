@@ -21,6 +21,20 @@ describe("Courses", function() {
     // postrequisites: ""
   }
 
+  let secondCourse = {
+    department: "PSY",
+    code: "101",
+    name: "Introduction to Psychology",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    units: "3",
+  }
+
+  before(function() {
+    const course = new Course(secondCourse)
+
+    course.save()
+  })
+
   it("should create course with valid attributes at POST /courses/new", function(done) {
     Course.estimatedDocumentCount()
       .then(function(initialDocCount) {
@@ -96,7 +110,6 @@ describe("Courses", function() {
         done(err)
       })
   })
-
 
   it("should update course attributes at PATCH /courses/TEST_101/edit_code", function(done) {
     testCourse.code = "102"
@@ -233,9 +246,6 @@ describe("Courses", function() {
       name: "Introduction to Testing",
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
       units: "3",
-      // prerequisites: "",
-      // corequisites: "",
-      // postrequisites: ""
     }
 
     agent
@@ -269,28 +279,43 @@ describe("Courses", function() {
   })
 
   it("should associate PSY101 to TST101 at PATCH /courses/TST_101/add_prerequisite/PSY_101", function(done) {
-    testCourse = {
-      department: "TST",
-      code: "101",
-      name: "Introduction to Testing",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      units: "3",
-    }
+    agent
+      .patch("/courses/TST_101/add_prerequisite/PSY_101")
+      .then(function(res) {
+        res.status.should.equal(200)
+        res.body.should.have.property("department").and.to.equal(testCourse.department)
+        res.body.should.have.property("code").and.to.equal(testCourse.code)
+        res.body.should.have.property("name").and.to.equal(testCourse.name)
+        res.body.should.have.property("description").and.to.equal(testCourse.description)
+        res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
+        res.body.should.have.property("prerequisites").and.to.be.a("Array").and.to.have.lengthOf(1)
+        agent
+          .get("/courses/PSY_101")
+          .then(function(res) {
+            res.body.should.have.property("department").and.to.equal(secondCourse.department)
+            res.body.should.have.property("code").and.to.equal(secondCourse.code)
+            res.body.should.have.property("name").and.to.equal(secondCourse.name)
+            res.body.should.have.property("description").and.to.equal(secondCourse.description)
+            res.body.should.have.property("units").and.to.equal(parseFloat(secondCourse.units))
+            res.body.should.have.property("postrequisites").and.to.be.a("Array").and.to.have.lengthOf(1)
+            done()
+          })
+          .catch(function(err) {
+            done(err)
+          })
+      })
+      .catch(function(err) {
+        done(err)
+      })
+  })
 
-    secondCourse = {
-      department: "PSY",
-      code: "101",
-      name: "Introduction to Psychology",
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      units: "3",
-    }
-
+  it("should disassociate PSY101 to TST101 at PATCH /courses/TST_101/delete_prerequisite/PSY_101", function(done) {
     agent
       .post("/courses/new")
       .send(secondCourse)
       .then(function(res) {
         agent
-          .patch("/courses/TST_101/add_prerequisite/PSY_101")
+          .patch("/courses/TST_101/delete_prerequisite/PSY_101")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -298,7 +323,7 @@ describe("Courses", function() {
             res.body.should.have.property("name").and.to.equal(testCourse.name)
             res.body.should.have.property("description").and.to.equal(testCourse.description)
             res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
-            res.body.should.have.property("prerequisites").and.to.be.a("Array").and.to.have.lengthOf(1)
+            res.body.should.have.property("prerequisites").and.to.be.a("Array").and.to.have.lengthOf(0)
             agent
               .get("/courses/PSY_101")
               .then(function(res) {
@@ -307,16 +332,52 @@ describe("Courses", function() {
                 res.body.should.have.property("name").and.to.equal(secondCourse.name)
                 res.body.should.have.property("description").and.to.equal(secondCourse.description)
                 res.body.should.have.property("units").and.to.equal(parseFloat(secondCourse.units))
-                res.body.should.have.property("postrequisites").and.to.be.a("Array").and.to.have.lengthOf(1)
+                res.body.should.have.property("postrequisites").and.to.be.a("Array").and.to.have.lengthOf(0)
                 done()
               })
               .catch(function(err) {
                 done(err)
               })
-        })
-        .catch(function(err) {
-          done(err)
-        })
+          })
+          .catch(function(err) {
+            done(err)
+          })
+      })
+      .catch(function(err) {
+        done(err)
+      })
+  })
+
+  it("should associate PSY101 to TST101 at PATCH /courses/TST_101/add_corequisite/PSY_101", function(done) {
+    agent
+      .patch("/courses/TST_101/add_corequisite/PSY_101")
+      .then(function(res) {
+        res.status.should.equal(200)
+        res.body.should.have.property("department").and.to.equal(testCourse.department)
+        res.body.should.have.property("code").and.to.equal(testCourse.code)
+        res.body.should.have.property("name").and.to.equal(testCourse.name)
+        res.body.should.have.property("description").and.to.equal(testCourse.description)
+        res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
+        res.body.should.have.property("corequisites").and.to.be.a("Array").and.to.have.lengthOf(1)
+        done()
+    })
+    .catch(function(err) {
+      done(err)
+    })
+  })
+
+  it("should disassociate PSY101 to TST101 at PATCH /courses/TST_101/delete_corequisite/PSY_101", function(done) {
+    agent
+      .patch("/courses/TST_101/delete_prerequisite/PSY_101")
+      .then(function(res) {
+        res.status.should.equal(200)
+        res.body.should.have.property("department").and.to.equal(testCourse.department)
+        res.body.should.have.property("code").and.to.equal(testCourse.code)
+        res.body.should.have.property("name").and.to.equal(testCourse.name)
+        res.body.should.have.property("description").and.to.equal(testCourse.description)
+        res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
+        res.body.should.have.property("prerequisites").and.to.be.a("Array").and.to.have.lengthOf(0)
+        done(err)
     })
     .catch(function(err) {
       done(err)
@@ -350,5 +411,6 @@ describe("Courses", function() {
 
   after(function() {
     Course.findOneAndDelete(testCourse)
+    Course.findOneAndDelete(secondCourse)
   })
 })
