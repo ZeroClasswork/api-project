@@ -410,7 +410,7 @@ describe("Courses", function() {
   })
 
   after(function() {
-    Course.findOneAndDelete(testCourse)
-    Course.findOneAndDelete(secondCourse)
+    Course.deleteMany(testCourse)
+    Course.deleteMany(secondCourse)
   })
 })

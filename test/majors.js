@@ -10,12 +10,26 @@ chai.use(chaiHttp)
 
 describe("Majors", function() {
   const agent = chai.request.agent(app)
+
+  // Major for Tests
   let testMajor = {
     type: "BS",
     name: "Test"
   }
 
+  // Course for Tests
+  let testCourse = {
+    department: "TST",
+    code: "101",
+    name: "Introduction to Testing",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    units: "3",
+  }
+
   before(function() {
+    const course = new Course(testCourse)
+    course.save()
+
     Major.deleteMany(testMajor)
   })
 
@@ -112,9 +126,6 @@ describe("Majors", function() {
       })
   })
 
-  // it("should add course to major at POST /majors/BS_Test/add_course")
-  // it("should remove course to major at DELETE /majors/BS_Test/add_course")
-
   it("should update major attributes at PUT /majors/BS_Test", function(done) {
     testMajor = {
       type: "BS",
@@ -144,6 +155,36 @@ describe("Majors", function() {
       })
   })
 
+  it("should add course to major at PATCH /majors/BS_Test/add_course_requirement/TST_101", function(done) {
+    agent
+      .patch("/majors/BS_Test/add_course_requirement/TST_101")
+      .then(function(res) {
+        res.status.should.equal(200)
+        res.body.should.have.property("type").and.to.equal(testMajor.type)
+        res.body.should.have.property("name").and.to.equal(testMajor.name)
+        res.body.should.have.property("courses_required").and.to.be.a("Array").and.to.have.lengthOf(1)
+        done()
+    })
+    .catch(function(err) {
+      done(err)
+    })
+  })
+
+  it("should add course to major at PATCH /majors/BS_Test/delete_course_requirement/TST_101", function(done) {
+    agent
+      .patch("/majors/BS_Test/delete_course_requirement/TST_101")
+      .then(function(res) {
+        res.status.should.equal(200)
+        res.body.should.have.property("type").and.to.equal(testMajor.type)
+        res.body.should.have.property("name").and.to.equal(testMajor.name)
+        res.body.should.have.property("courses_required").and.to.be.a("Array").and.to.have.lengthOf(0)
+        done()
+    })
+    .catch(function(err) {
+      done(err)
+    })
+  })
+
   it("should delete major at DELETE /majors/BS_Test", function(done) {
     Major.estimatedDocumentCount()
       .then(function(initialDocCount) {
@@ -151,7 +192,7 @@ describe("Majors", function() {
           .delete("/majors/BS_Test")
           .then(function(res) {
             res.should.have.status(200)
-            Course.estimatedDocumentCount()
+            Major.estimatedDocumentCount()
               .then(function(newDocCount) {
                 newDocCount.should.be.equal(initialDocCount - 1)
                 done()
@@ -170,6 +211,7 @@ describe("Majors", function() {
   })
 
   after(function() {
-    Major.findOneAndDelete(testMajor)
+    Major.deleteMany(testMajor)
+    Course.deleteMany(testCourse)
   })
 })
