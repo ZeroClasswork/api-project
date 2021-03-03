@@ -41,7 +41,7 @@ Courses - university, department, code, name, description, units, prerequisites,
 - [x] major DESTROY routes
 - [x] passing major endpoint tests
 - [x] tests for major course associations
-- [ ] passing tests for major course associations
+- [x] passing tests for major course associations
 
 ### Universities
 - [ ] tests for university endpoints
