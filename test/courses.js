@@ -43,9 +43,6 @@ describe("Courses", function() {
 
     const school = new School(testSchool)
     school.save()
-
-    const course = new Course(secondCourse)
-    course.save()
   })
 
   it("should create course with valid attributes at POST /schools/Test_University/courses/new", function(done) {
@@ -54,6 +51,33 @@ describe("Courses", function() {
         agent
           .post("/schools/Test_University/courses/new")
           .send(testCourse)
+          .then(function (res) {
+            res.status.should.equal(200)
+            res.body.should.be.a("Object")
+            Course.estimatedDocumentCount()
+              .then(function(newDocCount) {
+                newDocCount.should.be.equal(initialDocCount + 1)
+                done()
+              })
+              .catch(function(err) {
+                done(err)
+              })
+          })
+          .catch(function(err) {
+            done(err)
+          })
+      })
+      .catch(function(err) {
+        done(err)
+      })
+  })
+
+  it("should create course with valid attributes at POST /schools/Test_University/courses/new x2", function(done) {
+    Course.estimatedDocumentCount()
+      .then(function(initialDocCount) {
+        agent
+          .post("/schools/Test_University/courses/new")
+          .send(secondCourse)
           .then(function (res) {
             res.status.should.equal(200)
             res.body.should.be.a("Object")
