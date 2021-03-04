@@ -45,7 +45,7 @@ Courses - university, department, code, name, description, units, prerequisites,
 
 ### Universities
 - [x] tests for university endpoints
-- [ ] university model
+- [x] university model
 - [ ] course endpoints -> by university
 - [ ] major endpoints -> by university
 - [ ] university CREATE routes

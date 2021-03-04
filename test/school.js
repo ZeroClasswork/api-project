@@ -29,7 +29,7 @@ describe("School", function() {
       .then(function(initialDocCount) {
         agent
           .post("/schools/new")
-          .send(testMajor)
+          .send(testSchool)
           .then(function (res) {
             res.status.should.equal(200)
             res.body.should.be.a("Object")
