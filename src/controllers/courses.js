@@ -9,7 +9,7 @@ module.exports = app => {
     course
       .save()
       .then((course) => {
-        return res.status(200).json(course)
+        return res.json(course)
       })
       .catch((err) => {
         return res.sendStatus(424)
