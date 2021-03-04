@@ -43,14 +43,16 @@ Courses - university, department, code, name, description, units, prerequisites,
 - [x] tests for major course associations
 - [x] passing tests for major course associations
 
-### Universities
-- [x] tests for university endpoints
-- [x] university model
-- [ ] course endpoints -> by university
-- [ ] major endpoints -> by university
-- [ ] university CREATE routes
-- [ ] university READ routes
-- [ ] university UPDATE routes
-- [ ] university DESTROY routes
-- [ ] passing university endpoint tests
+### Schools
+- [x] tests for school endpoints
+- [x] school model
+- [ ] school CREATE routes
+- [ ] school READ routes
+- [ ] school UPDATE routes
+- [ ] school DESTROY routes
+- [ ] passing school endpoint tests
+
+### Refactor to have schools be central
+- [ ] course endpoints -> by school
+- [ ] major endpoints -> by school
 

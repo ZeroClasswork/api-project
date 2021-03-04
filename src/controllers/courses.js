@@ -12,8 +12,7 @@ module.exports = app => {
         return res.status(200).json(course)
       })
       .catch((err) => {
-        res.sendStatus(424)
-        throw err.message
+        return res.sendStatus(424)
       })
   })
 
