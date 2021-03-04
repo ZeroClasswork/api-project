@@ -2,8 +2,6 @@ const app = require("../server")
 const chai = require("chai")
 const chaiHttp = require("chai-http")
 
-const APIUser = require("../src/models/api_user")
-
 const School = require("../src/models/school")
 const Course = require("../src/models/course")
 

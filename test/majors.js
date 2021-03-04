@@ -12,6 +12,11 @@ chai.use(chaiHttp)
 describe("Majors", function() {
   const agent = chai.request.agent(app)
 
+  // API Key Variable
+  let api_key = {
+    "Authorization": "Api-Key 7310601efbd0bfae"
+  }
+
   // School for Tests
   let testSchool = {
     name: "Test University",
@@ -42,10 +47,12 @@ describe("Majors", function() {
 
     agent
       .post("/schools/new")
+      .set(api_key)
       .send(testSchool)
       .then(function(res) {
         agent
           .post("/schools/Test_University/courses/new")
+          .set(api_key)
           .send(testCourse)
           .catch(function(err) {})
       })
@@ -57,6 +64,7 @@ describe("Majors", function() {
       .then(function(initialDocCount) {
         agent
           .post("/schools/Test_University/majors/new")
+          .set(api_key)
           .send(testMajor)
           .then(function (res) {
             res.status.should.equal(200)
@@ -82,6 +90,7 @@ describe("Majors", function() {
   it("should receive major attributes at GET /schools/Test_University/majors/BS_Test", function(done) {
     agent
       .get("/schools/Test_University/majors/BS_Test")
+      .set(api_key)
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -97,6 +106,7 @@ describe("Majors", function() {
     testMajor.type = "BA"
     agent
       .patch("/schools/Test_University/majors/BS_Test/edit_type")
+      .set(api_key)
       .send({type: testMajor.type})
       .then(function(res) {
         res.status.should.equal(200)
@@ -104,6 +114,7 @@ describe("Majors", function() {
         res.body.should.have.property("name").and.to.equal(testMajor.name)
         agent
           .get("/schools/Test_University/majors/BA_Test")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -123,6 +134,7 @@ describe("Majors", function() {
     testMajor.name = "test"
     agent
       .patch("/schools/Test_University/majors/BA_Test/edit_type")
+      .set(api_key)
       .send({name: testMajor.name})
       .then(function(res) {
         res.status.should.equal(200)
@@ -130,6 +142,7 @@ describe("Majors", function() {
         res.body.should.have.property("name").and.to.equal(testMajor.name)
         agent
           .get("/schools/Test_University/majors/BA_test")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -152,6 +165,7 @@ describe("Majors", function() {
     }
     agent
       .put("/schools/Test_University/majors/BA_test")
+      .set(api_key)
       .send(testMajor)
       .then(function(res) {
         res.status.should.equal(200)
@@ -159,6 +173,7 @@ describe("Majors", function() {
         res.body.should.have.property("name").and.to.equal(testMajor.name)
         agent
           .get("/schools/Test_University/majors/BS_Test")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -177,6 +192,7 @@ describe("Majors", function() {
   it("should add course to major at PATCH /schools/Test_University/majors/BS_Test/add_course_requirement/TST_101", function(done) {
     agent
       .patch("/schools/Test_University/majors/BS_Test/add_course_requirement/TST_101")
+      .set(api_key)
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -192,6 +208,7 @@ describe("Majors", function() {
   it("should delete course from major at PATCH /schools/Test_University/majors/BS_Test/delete_course_requirement/TST_101", function(done) {
     agent
       .patch("/schools/Test_University/majors/BS_Test/delete_course_requirement/TST_101")
+      .set(api_key)
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -209,6 +226,7 @@ describe("Majors", function() {
       .then(function(initialDocCount) {
         agent
           .delete("/schools/Test_University/majors/BS_Test")
+          .set(api_key)
           .then(function(res) {
             res.should.have.status(200)
             Major.estimatedDocumentCount()
