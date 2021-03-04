@@ -1,9 +1,16 @@
+const School = require("../models/school")
 const Major = require("../models/major")
 const Course = require("../models/course")
 
 module.exports = app => {
   // CREATE MAJOR
-  app.post("/majors/new", (req, res) => {
+  app.post("/schools/:schoolSlug/majors/new", async (req, res) => {
+    const schoolSlug = req.params.schoolSlug
+    const slugSplit = schoolSlug.split("_")
+    const school = await School.findOne({name: slugSplit.join(" ")})
+
+    req.body.school = school._id
+
     const major = new Major(req.body)
 
     major
@@ -17,10 +24,14 @@ module.exports = app => {
   })
 
   // READ MAJOR
-  app.get("/majors/:majorSlug", (req, res) => {
+  app.get("/schools/:schoolSlug/majors/:majorSlug", async (req, res) => {
+    const schoolSlug = req.params.schoolSlug
+    const schoolSlugSplit = schoolSlug.split("_")
+    const school = await School.findOne({name: schoolSlugSplit.join(" ")})
+
     var majorSlug = req.params.majorSlug
-    var slugSplit = majorSlug.split("_")
-    Major.findOne({type: slugSplit[0], name: slugSplit[1]})
+    var majorSlugSplit = majorSlug.split("_")
+    Major.findOne({school: school._id, type: majorSlugSplit[0], name: majorSlugSplit[1]})
       .then((major) => {
         return res.json(major)
       })
@@ -30,11 +41,15 @@ module.exports = app => {
   })
 
   // UPDATE MAJOR
-  app.patch("/majors/:majorSlug/edit_type", (req, res) => {
+  app.patch("/schools/:schoolSlug/majors/:majorSlug/edit_type", async (req, res) => {
+    const schoolSlug = req.params.schoolSlug
+    const schoolSlugSplit = schoolSlug.split("_")
+    const school = await School.findOne({name: schoolSlugSplit.join(" ")})
+
     var majorSlug = req.params.majorSlug
-    var slugSplit = majorSlug.split("_")
+    var majorSlugSplit = majorSlug.split("_")
     Major.findOneAndUpdate(
-      {type: slugSplit[0], name: slugSplit[1]},
+      {school: school._id, type: majorSlugSplit[0], name: majorSlugSplit[1]},
       req.body,
       {new: true}
     )
@@ -46,11 +61,15 @@ module.exports = app => {
       })
   })
 
-  app.patch("/majors/:majorSlug/edit_name", (req, res) => {
+  app.patch("/schools/:schoolSlug/majors/:majorSlug/edit_name", async (req, res) => {
+    const schoolSlug = req.params.schoolSlug
+    const schoolSlugSplit = schoolSlug.split("_")
+    const school = await School.findOne({name: schoolSlugSplit.join(" ")})
+
     var majorSlug = req.params.majorSlug
-    var slugSplit = majorSlug.split("_")
+    var majorSlugSplit = majorSlug.split("_")
     Major.findOneAndUpdate(
-      {type: slugSplit[0], name: slugSplit[1]},
+      {school: school._id, type: majorSlugSplit[0], name: majorSlugSplit[1]},
       req.body,
       {new: true}
     )
@@ -62,11 +81,15 @@ module.exports = app => {
       })
   })
 
-  app.put("/majors/:majorSlug", (req, res) => {
+  app.put("/schools/:schoolSlug/majors/:majorSlug", async (req, res) => {
+    const schoolSlug = req.params.schoolSlug
+    const schoolSlugSplit = schoolSlug.split("_")
+    const school = await School.findOne({name: schoolSlugSplit.join(" ")})
+
     var majorSlug = req.params.majorSlug
-    var slugSplit = majorSlug.split("_")
+    var majorSlugSplit = majorSlug.split("_")
     Major.findOneAndUpdate(
-      {type: slugSplit[0], name: slugSplit[1]},
+      {school: school._id, type: majorSlugSplit[0], name: majorSlugSplit[1]},
       req.body,
       {new: true}
     )
@@ -79,18 +102,22 @@ module.exports = app => {
   })
 
   // CHANGE MAJOR-COURSE ASSOCIATIONS
-  app.patch("/majors/:majorSlug/add_course_requirement/:courseSlug", async (req, res) => {
+  app.patch("/schools/:schoolSlug/majors/:majorSlug/add_course_requirement/:courseSlug", async (req, res) => {
+    const schoolSlug = req.params.schoolSlug
+    const schoolSlugSplit = schoolSlug.split("_")
+    const school = await School.findOne({name: schoolSlugSplit.join(" ")})
+
     var majorSlug = req.params.majorSlug
     var courseSlug = req.params.courseSlug
     var slugOneSplit = majorSlug.split("_")
     var slugTwoSplit = courseSlug.split("_")
 
     Major.findOne(
-      {type: slugOneSplit[0], name: slugOneSplit[1]},
+      {school: school._id, type: slugOneSplit[0], name: slugOneSplit[1]},
     )
       .then(async (major) => {
         course = await Course.findOne(
-          {department: slugTwoSplit[0], code: slugTwoSplit[1]},
+          {school: school._id, department: slugTwoSplit[0], code: slugTwoSplit[1]},
         )
         major.courses_required.unshift(course._id)
         major.save()
@@ -100,23 +127,26 @@ module.exports = app => {
         return res.json(major)
       })
       .catch((err) => {
-        console.log(err)
         return res.sendStatus(400)
       })
   })
 
-  app.patch("/majors/:majorSlug/delete_course_requirement/:courseSlug", async (req, res) => {
+  app.patch("/schools/:schoolSlug/majors/:majorSlug/delete_course_requirement/:courseSlug", async (req, res) => {
+    const schoolSlug = req.params.schoolSlug
+    const schoolSlugSplit = schoolSlug.split("_")
+    const school = await School.findOne({name: schoolSlugSplit.join(" ")})
+
     var majorSlug = req.params.majorSlug
     var courseSlug = req.params.courseSlug
     var slugOneSplit = majorSlug.split("_")
     var slugTwoSplit = courseSlug.split("_")
 
     Major.findOne(
-      {type: slugOneSplit[0], name: slugOneSplit[1]},
+      {school: school._id, type: slugOneSplit[0], name: slugOneSplit[1]},
     )
       .then(async (major) => {
         course = await Course.findOne(
-          {department: slugTwoSplit[0], code: slugTwoSplit[1]},
+          {school: school._id, department: slugTwoSplit[0], code: slugTwoSplit[1]},
         )
         major.courses_required.remove(course._id)
         major.save()
@@ -126,16 +156,19 @@ module.exports = app => {
         return res.json(major)
       })
       .catch((err) => {
-        console.log(err)
         return res.sendStatus(400)
       })
   })
 
   // DELETE MAJOR
-  app.delete("/majors/:majorSlug", (req, res) => {
+  app.delete("/schools/:schoolSlug/majors/:majorSlug", async (req, res) => {
+    const schoolSlug = req.params.schoolSlug
+    const schoolSlugSplit = schoolSlug.split("_")
+    const school = await School.findOne({name: schoolSlugSplit.join(" ")})
+
     var majorSlug = req.params.majorSlug
     var slugSplit = majorSlug.split("_")
-    Major.findOneAndDelete({type: slugSplit[0], name: slugSplit[1]}, (err) => {
+    Major.findOneAndDelete({school: school._id, type: slugSplit[0], name: slugSplit[1]}, (err) => {
       if (err) {
         return res.sendStatus(404)
       } else {

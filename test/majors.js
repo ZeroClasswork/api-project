@@ -40,11 +40,16 @@ describe("Majors", function() {
     Major.deleteMany(testMajor)
     Course.deleteMany(testCourse)
 
-    const course = new Course(testCourse)
-    course.save()
-
-    const school = new School(testSchool)
-    school.save()
+    agent
+      .post("/schools/new")
+      .send(testSchool)
+      .then(function(res) {
+        agent
+          .post("/schools/Test_University/courses/new")
+          .send(testCourse)
+          .catch(function(err) {})
+      })
+      .catch(function(err) {})
   })
 
   it("should create new major with valid attributes at POST /schools/Test_University/majors/new", function(done) {
@@ -98,7 +103,7 @@ describe("Majors", function() {
         res.body.should.have.property("type").and.to.equal(testMajor.type)
         res.body.should.have.property("name").and.to.equal(testMajor.name)
         agent
-          .get("/majors/BA_Test")
+          .get("/schools/Test_University/majors/BA_Test")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("type").and.to.equal(testMajor.type)

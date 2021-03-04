@@ -188,7 +188,6 @@ module.exports = app => {
         return res.json(courseOne)
       })
       .catch((err) => {
-        console.log(err)
         return res.sendStatus(400)
       })
   })

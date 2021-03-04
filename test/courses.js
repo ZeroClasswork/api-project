@@ -41,8 +41,16 @@ describe("Courses", function() {
     Course.deleteMany(testCourse)
     Course.deleteMany(secondCourse)
 
-    const school = new School(testSchool)
-    school.save()
+    agent
+      .post("/schools/new")
+      .send(testSchool)
+      .then(function(res) {
+        agent
+          .post("/schools/Test_University/courses/new")
+          .send(secondCourse)
+          .catch(function(err) {})
+      })
+      .catch(function(err) {})
   })
 
   it("should create course with valid attributes at POST /schools/Test_University/courses/new", function(done) {
@@ -56,34 +64,7 @@ describe("Courses", function() {
             res.body.should.be.a("Object")
             Course.estimatedDocumentCount()
               .then(function(newDocCount) {
-                newDocCount.should.be.equal(initialDocCount + 1)
-                done()
-              })
-              .catch(function(err) {
-                done(err)
-              })
-          })
-          .catch(function(err) {
-            done(err)
-          })
-      })
-      .catch(function(err) {
-        done(err)
-      })
-  })
-
-  it("should create course with valid attributes at POST /schools/Test_University/courses/new x2", function(done) {
-    Course.estimatedDocumentCount()
-      .then(function(initialDocCount) {
-        agent
-          .post("/schools/Test_University/courses/new")
-          .send(secondCourse)
-          .then(function (res) {
-            res.status.should.equal(200)
-            res.body.should.be.a("Object")
-            Course.estimatedDocumentCount()
-              .then(function(newDocCount) {
-                newDocCount.should.be.equal(initialDocCount + 1)
+                newDocCount.should.be.equal(initialDocCount + 2)
                 done()
               })
               .catch(function(err) {

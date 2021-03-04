@@ -58,11 +58,11 @@ Courses - university, department, code, name, description, units, prerequisites,
   - [x] add school to course model
   - [x] update routes
   - [x] passing all tests
-- [ ] major endpoints -> by school
+- [x] major endpoints -> by school
   - [x] update tests
-  - [ ] add school to major model
-  - [ ] update routes
-  - [ ] passing all tests
+  - [x] add school to major model
+  - [x] update routes
+  - [x] passing all tests
 
 ### Authentication
 - [ ] plan authentication implementation
