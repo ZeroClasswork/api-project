@@ -46,11 +46,11 @@ Courses - university, department, code, name, description, units, prerequisites,
 ### Schools
 - [x] tests for school endpoints
 - [x] school model
-- [ ] school CREATE routes
-- [ ] school READ routes
-- [ ] school UPDATE routes
-- [ ] school DESTROY routes
-- [ ] passing school endpoint tests
+- [x] school CREATE routes
+- [x] school READ routes
+- [x] school UPDATE routes
+- [x] school DESTROY routes
+- [x] passing school endpoint tests
 
 ### Refactor to have schools be central
 - [ ] course endpoints -> by school

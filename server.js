@@ -15,6 +15,7 @@ app.use(expressValidator())
 
 require("./data/courses-db")
 
+require("./src/controllers/schools")(app)
 require("./src/controllers/courses")(app)
 require("./src/controllers/majors")(app)
 
