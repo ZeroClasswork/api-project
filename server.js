@@ -14,7 +14,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(expressValidator())
 
 require("./data/courses-db")
+require('./src/config/passport');
 
+require("./src/controllers/api_auth")(app)
 require("./src/controllers/schools")(app)
 require("./src/controllers/courses")(app)
 require("./src/controllers/majors")(app)

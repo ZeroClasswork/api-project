@@ -64,5 +64,12 @@ Courses - university, department, code, name, description, units, prerequisites,
   - [x] update routes
   - [x] passing all tests
 
-### Authentication
-- [ ] plan authentication implementation
+### Authentication (Not TDD since idk how to write tests for passport)
+- [x] user model
+- [x] api key generation
+- [x] add auth to course routes
+- [x] add auth to course tests
+- [ ] add auth to major routes
+- [ ] add auth to major tests
+- [ ] add auth to school routes
+- [ ] add auth to school tests

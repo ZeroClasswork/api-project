@@ -13,7 +13,9 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "express-validator": "^5.3.1",
-    "mongoose": "^5.11.17"
+    "mongoose": "^5.11.17",
+    "passport": "^0.4.1",
+    "passport-headerapikey": "^1.2.2"
   },
   "devDependencies": {
     "chai": "^4.3.0",

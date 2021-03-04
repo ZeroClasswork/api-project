@@ -2,6 +2,8 @@ const app = require("../server")
 const chai = require("chai")
 const chaiHttp = require("chai-http")
 
+const APIUser = require("../src/models/api_user")
+
 const School = require("../src/models/school")
 const Course = require("../src/models/course")
 
@@ -10,6 +12,11 @@ chai.use(chaiHttp)
 
 describe("Courses", function() {
   const agent = chai.request.agent(app)
+
+  // API Key Variable
+  let api_key = {
+    "Authorization": "Api-Key 7310601efbd0bfae"
+  }
 
   // School for Tests
   let testSchool = {
@@ -43,10 +50,12 @@ describe("Courses", function() {
 
     agent
       .post("/schools/new")
+      .set(api_key)
       .send(testSchool)
       .then(function(res) {
         agent
           .post("/schools/Test_University/courses/new")
+          .set(api_key)
           .send(secondCourse)
           .catch(function(err) {})
       })
@@ -58,6 +67,7 @@ describe("Courses", function() {
       .then(function(initialDocCount) {
         agent
           .post("/schools/Test_University/courses/new")
+          .set(api_key)
           .send(testCourse)
           .then(function (res) {
             res.status.should.equal(200)
@@ -83,6 +93,7 @@ describe("Courses", function() {
   it("should receive course attributes at GET /schools/Test_University/courses/TST_101", function(done) {
     agent
       .get("/schools/Test_University/courses/TST_101")
+      .set(api_key)
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -101,6 +112,7 @@ describe("Courses", function() {
     testCourse.department = "TEST"
     agent
       .patch("/schools/Test_University/courses/TST_101/edit_department")
+      .set(api_key)
       .send({department: testCourse.department})
       .then(function(res) {
         res.status.should.equal(200)
@@ -111,6 +123,7 @@ describe("Courses", function() {
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
           .get("/schools/Test_University/courses/TEST_101")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -133,6 +146,7 @@ describe("Courses", function() {
     testCourse.code = "102"
     agent
       .patch("/schools/Test_University/courses/TEST_101/edit_code")
+      .set(api_key)
       .send({code: testCourse.code})
       .then(function(res) {
         res.status.should.equal(200)
@@ -143,6 +157,7 @@ describe("Courses", function() {
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
           .get("/schools/Test_University/courses/TEST_102")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -165,6 +180,7 @@ describe("Courses", function() {
     testCourse.name = "Testing Lab"
     agent
       .patch("/schools/Test_University/courses/TEST_102/edit_name")
+      .set(api_key)
       .send({name: testCourse.name})
       .then(function(res) {
         res.status.should.equal(200)
@@ -175,6 +191,7 @@ describe("Courses", function() {
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
           .get("/schools/Test_University/courses/TEST_102")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -197,6 +214,7 @@ describe("Courses", function() {
     testCourse.description = "Shorter Description"
     agent
       .patch("/schools/Test_University/courses/TEST_102/edit_description")
+      .set(api_key)
       .send({description: testCourse.description})
       .then(function(res) {
         res.status.should.equal(200)
@@ -207,6 +225,7 @@ describe("Courses", function() {
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
           .get("/schools/Test_University/courses/TEST_102")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -229,6 +248,7 @@ describe("Courses", function() {
     testCourse.units = "5"
     agent
       .patch("/schools/Test_University/courses/TEST_102/edit_units")
+      .set(api_key)
       .send({units: testCourse.units})
       .then(function(res) {
         res.status.should.equal(200)
@@ -239,6 +259,7 @@ describe("Courses", function() {
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
           .get("/schools/Test_University/courses/TEST_102")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -268,6 +289,7 @@ describe("Courses", function() {
 
     agent
       .put("/schools/Test_University/courses/TEST_102")
+      .set(api_key)
       .send(testCourse)
       .then(function(res) {
         res.status.should.equal(200)
@@ -278,6 +300,7 @@ describe("Courses", function() {
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
           .get("/schools/Test_University/courses/TST_101")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -299,6 +322,7 @@ describe("Courses", function() {
   it("should associate PSY101 to TST101 at PATCH /schools/Test_University/courses/TST_101/add_prerequisite/PSY_101", function(done) {
     agent
       .patch("/schools/Test_University/courses/TST_101/add_prerequisite/PSY_101")
+      .set(api_key)
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -309,6 +333,7 @@ describe("Courses", function() {
         res.body.should.have.property("prerequisites").and.to.be.a("Array").and.to.have.lengthOf(1)
         agent
           .get("/schools/Test_University/courses/PSY_101")
+          .set(api_key)
           .then(function(res) {
             res.body.should.have.property("department").and.to.equal(secondCourse.department)
             res.body.should.have.property("code").and.to.equal(secondCourse.code)
@@ -330,10 +355,12 @@ describe("Courses", function() {
   it("should disassociate PSY101 to TST101 at PATCH /schools/Test_University/courses/TST_101/delete_prerequisite/PSY_101", function(done) {
     agent
       .post("/schools/Test_University/courses/new")
+      .set(api_key)
       .send(secondCourse)
       .then(function(res) {
         agent
           .patch("/schools/Test_University/courses/TST_101/delete_prerequisite/PSY_101")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -344,6 +371,7 @@ describe("Courses", function() {
             res.body.should.have.property("prerequisites").and.to.be.a("Array").and.to.have.lengthOf(0)
             agent
               .get("/schools/Test_University/courses/PSY_101")
+              .set(api_key)
               .then(function(res) {
                 res.body.should.have.property("department").and.to.equal(secondCourse.department)
                 res.body.should.have.property("code").and.to.equal(secondCourse.code)
@@ -369,6 +397,7 @@ describe("Courses", function() {
   it("should associate PSY101 to TST101 at PATCH /schools/Test_University/courses/TST_101/add_corequisite/PSY_101", function(done) {
     agent
       .patch("/schools/Test_University/courses/TST_101/add_corequisite/PSY_101")
+      .set(api_key)
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -387,6 +416,7 @@ describe("Courses", function() {
   it("should disassociate PSY101 to TST101 at PATCH /schools/Test_University/courses/TST_101/delete_corequisite/PSY_101", function(done) {
     agent
       .patch("/schools/Test_University/courses/TST_101/delete_prerequisite/PSY_101")
+      .set(api_key)
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -407,6 +437,7 @@ describe("Courses", function() {
       .then(function(initialDocCount) {
         agent
           .delete("/schools/Test_University/courses/TST_101")
+          .set(api_key)
           .then(function(res) {
             res.should.have.status(200)
             Course.estimatedDocumentCount()
