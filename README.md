@@ -44,7 +44,7 @@ Courses - university, department, code, name, description, units, prerequisites,
 - [x] passing tests for major course associations
 
 ### Universities
-- [ ] tests for university endpoints
+- [x] tests for university endpoints
 - [ ] university model
 - [ ] course endpoints -> by university
 - [ ] major endpoints -> by university
