@@ -2,6 +2,7 @@ const app = require("../server")
 const chai = require("chai")
 const chaiHttp = require("chai-http")
 
+const School = require("../src/models/school")
 const Course = require("../src/models/course")
 
 chai.should()
@@ -9,6 +10,15 @@ chai.use(chaiHttp)
 
 describe("Courses", function() {
   const agent = chai.request.agent(app)
+
+  // School for Tests
+  let testSchool = {
+    name: "Test University",
+    city: "Test Francisco",
+    state: "North Testkota",
+    country: "United Tests of America"
+  }
+
   // Course for Tests
   let testCourse = {
     department: "TST",
@@ -27,19 +37,22 @@ describe("Courses", function() {
   }
 
   before(function() {
-    const course = new Course(secondCourse)
-
-    course.save()
-
+    School.deleteMany(testSchool)
     Course.deleteMany(testCourse)
     Course.deleteMany(secondCourse)
+
+    const school = new School(testSchool)
+    school.save()
+
+    const course = new Course(secondCourse)
+    course.save()
   })
 
-  it("should create course with valid attributes at POST /courses/new", function(done) {
+  it("should create course with valid attributes at POST /schools/Test_University/courses/new", function(done) {
     Course.estimatedDocumentCount()
       .then(function(initialDocCount) {
         agent
-          .post("/courses/new")
+          .post("/schools/Test_University/courses/new")
           .send(testCourse)
           .then(function (res) {
             res.status.should.equal(200)
@@ -62,9 +75,9 @@ describe("Courses", function() {
       })
   })
 
-  it("should receive course attributes at GET /courses/TST_101", function(done) {
+  it("should receive course attributes at GET /schools/Test_University/courses/TST_101", function(done) {
     agent
-      .get("/courses/TST_101")
+      .get("/schools/Test_University/courses/TST_101")
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -79,10 +92,10 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PATCH /courses/TST_101/edit_department", function(done) {
+  it("should update course attributes at PATCH /schools/Test_University/courses/TST_101/edit_department", function(done) {
     testCourse.department = "TEST"
     agent
-      .patch("/courses/TST_101/edit_department")
+      .patch("/schools/Test_University/courses/TST_101/edit_department")
       .send({department: testCourse.department})
       .then(function(res) {
         res.status.should.equal(200)
@@ -92,7 +105,7 @@ describe("Courses", function() {
         res.body.should.have.property("description").and.to.equal(testCourse.description)
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
-          .get("/courses/TEST_101")
+          .get("/schools/Test_University/courses/TEST_101")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -111,10 +124,10 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PATCH /courses/TEST_101/edit_code", function(done) {
+  it("should update course attributes at PATCH /schools/Test_University/courses/TEST_101/edit_code", function(done) {
     testCourse.code = "102"
     agent
-      .patch("/courses/TEST_101/edit_code")
+      .patch("/schools/Test_University/courses/TEST_101/edit_code")
       .send({code: testCourse.code})
       .then(function(res) {
         res.status.should.equal(200)
@@ -124,7 +137,7 @@ describe("Courses", function() {
         res.body.should.have.property("description").and.to.equal(testCourse.description)
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
-          .get("/courses/TEST_102")
+          .get("/schools/Test_University/courses/TEST_102")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -143,10 +156,10 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PATCH /courses/TEST_102/edit_name", function(done) {
+  it("should update course attributes at PATCH /schools/Test_University/courses/TEST_102/edit_name", function(done) {
     testCourse.name = "Testing Lab"
     agent
-      .patch("/courses/TEST_102/edit_name")
+      .patch("/schools/Test_University/courses/TEST_102/edit_name")
       .send({name: testCourse.name})
       .then(function(res) {
         res.status.should.equal(200)
@@ -156,7 +169,7 @@ describe("Courses", function() {
         res.body.should.have.property("description").and.to.equal(testCourse.description)
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
-          .get("/courses/TEST_102")
+          .get("/schools/Test_University/courses/TEST_102")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -175,10 +188,10 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PATCH /courses/TEST_102/edit_description", function(done) {
+  it("should update course attributes at PATCH /schools/Test_University/courses/TEST_102/edit_description", function(done) {
     testCourse.description = "Shorter Description"
     agent
-      .patch("/courses/TEST_102/edit_description")
+      .patch("/schools/Test_University/courses/TEST_102/edit_description")
       .send({description: testCourse.description})
       .then(function(res) {
         res.status.should.equal(200)
@@ -188,7 +201,7 @@ describe("Courses", function() {
         res.body.should.have.property("description").and.to.equal(testCourse.description)
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
-          .get("/courses/TEST_102")
+          .get("/schools/Test_University/courses/TEST_102")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -207,10 +220,10 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PATCH /courses/TEST_102/edit_units", function(done) {
+  it("should update course attributes at PATCH /schools/Test_University/courses/TEST_102/edit_units", function(done) {
     testCourse.units = "5"
     agent
-      .patch("/courses/TEST_102/edit_units")
+      .patch("/schools/Test_University/courses/TEST_102/edit_units")
       .send({units: testCourse.units})
       .then(function(res) {
         res.status.should.equal(200)
@@ -220,7 +233,7 @@ describe("Courses", function() {
         res.body.should.have.property("description").and.to.equal(testCourse.description)
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
-          .get("/courses/TEST_102")
+          .get("/schools/Test_University/courses/TEST_102")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -239,7 +252,7 @@ describe("Courses", function() {
       })
   })
 
-  it("should update course attributes at PUT /courses/TEST_102", function(done) {
+  it("should update course attributes at PUT /schools/Test_University/courses/TEST_102", function(done) {
     testCourse = {
       department: "TST",
       code: "101",
@@ -249,7 +262,7 @@ describe("Courses", function() {
     }
 
     agent
-      .put("/courses/TEST_102")
+      .put("/schools/Test_University/courses/TEST_102")
       .send(testCourse)
       .then(function(res) {
         res.status.should.equal(200)
@@ -259,7 +272,7 @@ describe("Courses", function() {
         res.body.should.have.property("description").and.to.equal(testCourse.description)
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         agent
-          .get("/courses/TST_101")
+          .get("/schools/Test_University/courses/TST_101")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -278,9 +291,9 @@ describe("Courses", function() {
       })
   })
 
-  it("should associate PSY101 to TST101 at PATCH /courses/TST_101/add_prerequisite/PSY_101", function(done) {
+  it("should associate PSY101 to TST101 at PATCH /schools/Test_University/courses/TST_101/add_prerequisite/PSY_101", function(done) {
     agent
-      .patch("/courses/TST_101/add_prerequisite/PSY_101")
+      .patch("/schools/Test_University/courses/TST_101/add_prerequisite/PSY_101")
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -290,7 +303,7 @@ describe("Courses", function() {
         res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
         res.body.should.have.property("prerequisites").and.to.be.a("Array").and.to.have.lengthOf(1)
         agent
-          .get("/courses/PSY_101")
+          .get("/schools/Test_University/courses/PSY_101")
           .then(function(res) {
             res.body.should.have.property("department").and.to.equal(secondCourse.department)
             res.body.should.have.property("code").and.to.equal(secondCourse.code)
@@ -309,13 +322,13 @@ describe("Courses", function() {
       })
   })
 
-  it("should disassociate PSY101 to TST101 at PATCH /courses/TST_101/delete_prerequisite/PSY_101", function(done) {
+  it("should disassociate PSY101 to TST101 at PATCH /schools/Test_University/courses/TST_101/delete_prerequisite/PSY_101", function(done) {
     agent
-      .post("/courses/new")
+      .post("/schools/Test_University/courses/new")
       .send(secondCourse)
       .then(function(res) {
         agent
-          .patch("/courses/TST_101/delete_prerequisite/PSY_101")
+          .patch("/schools/Test_University/courses/TST_101/delete_prerequisite/PSY_101")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -325,7 +338,7 @@ describe("Courses", function() {
             res.body.should.have.property("units").and.to.equal(parseFloat(testCourse.units))
             res.body.should.have.property("prerequisites").and.to.be.a("Array").and.to.have.lengthOf(0)
             agent
-              .get("/courses/PSY_101")
+              .get("/schools/Test_University/courses/PSY_101")
               .then(function(res) {
                 res.body.should.have.property("department").and.to.equal(secondCourse.department)
                 res.body.should.have.property("code").and.to.equal(secondCourse.code)
@@ -348,9 +361,9 @@ describe("Courses", function() {
       })
   })
 
-  it("should associate PSY101 to TST101 at PATCH /courses/TST_101/add_corequisite/PSY_101", function(done) {
+  it("should associate PSY101 to TST101 at PATCH /schools/Test_University/courses/TST_101/add_corequisite/PSY_101", function(done) {
     agent
-      .patch("/courses/TST_101/add_corequisite/PSY_101")
+      .patch("/schools/Test_University/courses/TST_101/add_corequisite/PSY_101")
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -366,9 +379,9 @@ describe("Courses", function() {
     })
   })
 
-  it("should disassociate PSY101 to TST101 at PATCH /courses/TST_101/delete_corequisite/PSY_101", function(done) {
+  it("should disassociate PSY101 to TST101 at PATCH /schools/Test_University/courses/TST_101/delete_corequisite/PSY_101", function(done) {
     agent
-      .patch("/courses/TST_101/delete_prerequisite/PSY_101")
+      .patch("/schools/Test_University/courses/TST_101/delete_prerequisite/PSY_101")
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("department").and.to.equal(testCourse.department)
@@ -384,11 +397,11 @@ describe("Courses", function() {
     })
   })
 
-  it("should delete course at DELETE /courses/TST_101", function(done) {
+  it("should delete course at DELETE /schools/Test_University/courses/TST_101", function(done) {
     Course.estimatedDocumentCount()
       .then(function(initialDocCount) {
         agent
-          .delete("/courses/TST_101")
+          .delete("/schools/Test_University/courses/TST_101")
           .then(function(res) {
             res.should.have.status(200)
             Course.estimatedDocumentCount()

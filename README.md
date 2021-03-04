@@ -54,7 +54,7 @@ Courses - university, department, code, name, description, units, prerequisites,
 
 ### Refactor to have schools be central
 - [ ] course endpoints -> by school
-  - [ ] update tests
+  - [x] update tests
   - [ ] add school to course model
   - [ ] update routes
   - [ ] passing all tests
