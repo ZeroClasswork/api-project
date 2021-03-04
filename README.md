@@ -69,7 +69,7 @@ Courses - university, department, code, name, description, units, prerequisites,
 - [x] api key generation
 - [x] add auth to course routes
 - [x] add auth to course tests
-- [ ] add auth to major routes
-- [ ] add auth to major tests
-- [ ] add auth to school routes
-- [ ] add auth to school tests
+- [x] add auth to major routes
+- [x] add auth to major tests
+- [x] add auth to school routes
+- [x] add auth to school tests
