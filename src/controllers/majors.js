@@ -153,7 +153,6 @@ module.exports = app => {
           return res.json(major)
         })
         .catch((err) => {
-          console.log(err)
           return res.sendStatus(400)
         })
   })
@@ -187,7 +186,6 @@ module.exports = app => {
           return res.json(major)
         })
         .catch((err) => {
-          console.log(err)
           return res.sendStatus(400)
         })
   })

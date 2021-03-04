@@ -3,14 +3,17 @@ const chai = require("chai")
 const chaiHttp = require("chai-http")
 
 const School = require("../src/models/school")
-const Course = require("../src/models/course")
-const Major = require("../src/models/major")
 
 chai.should()
 chai.use(chaiHttp)
 
 describe("School", function() {
   const agent = chai.request.agent(app)
+
+  // API Key Variable
+  let api_key = {
+    "Authorization": "Api-Key " + process.env.API_KEY
+  }
 
   // School for Tests
   let testSchool = {
@@ -29,6 +32,7 @@ describe("School", function() {
       .then(function(initialDocCount) {
         agent
           .post("/schools/new")
+          .set(api_key)
           .send(testSchool)
           .then(function (res) {
             res.status.should.equal(200)
@@ -54,6 +58,7 @@ describe("School", function() {
   it("should receive school attributes at GET /schools/Test_University", function(done) {
     agent
       .get("/schools/Test_University")
+      .set(api_key)
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("name").and.to.equal(testSchool.name)
@@ -71,6 +76,7 @@ describe("School", function() {
     testSchool.name = "Test College"
     agent
       .patch("/schools/Test_University/edit_name")
+      .set(api_key)
       .send({name: testSchool.name})
       .then(function(res) {
         res.status.should.equal(200)
@@ -80,6 +86,7 @@ describe("School", function() {
         res.body.should.have.property("country").and.to.equal(testSchool.country)
         agent
           .get("/schools/Test_College")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("name").and.to.equal(testSchool.name)
@@ -101,6 +108,7 @@ describe("School", function() {
     testSchool.city = "Santa Testia"
     agent
       .patch("/schools/Test_College/edit_city")
+      .set(api_key)
       .send({city: testSchool.city})
       .then(function(res) {
         res.status.should.equal(200)
@@ -110,6 +118,7 @@ describe("School", function() {
         res.body.should.have.property("country").and.to.equal(testSchool.country)
         agent
           .get("/schools/Test_College")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("name").and.to.equal(testSchool.name)
@@ -131,6 +140,7 @@ describe("School", function() {
     testSchool.state = "Testconsin"
     agent
       .patch("/schools/Test_College/edit_state")
+      .set(api_key)
       .send({state: testSchool.state})
       .then(function(res) {
         res.status.should.equal(200)
@@ -140,6 +150,7 @@ describe("School", function() {
         res.body.should.have.property("country").and.to.equal(testSchool.country)
         agent
           .get("/schools/Test_College")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("name").and.to.equal(testSchool.name)
@@ -161,6 +172,7 @@ describe("School", function() {
     testSchool.country = "Mexitest"
     agent
       .patch("/schools/Test_College/edit_country")
+      .set(api_key)
       .send({country: testSchool.country})
       .then(function(res) {
         res.status.should.equal(200)
@@ -170,6 +182,7 @@ describe("School", function() {
         res.body.should.have.property("country").and.to.equal(testSchool.country)
         agent
           .get("/schools/Test_College")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("name").and.to.equal(testSchool.name)
@@ -197,6 +210,7 @@ describe("School", function() {
 
     agent
       .put("/schools/Test_College")
+      .set(api_key)
       .send(testSchool)
       .then(function(res) {
         res.status.should.equal(200)
@@ -206,6 +220,7 @@ describe("School", function() {
         res.body.should.have.property("country").and.to.equal(testSchool.country)
         agent
           .get("/schools/Test_University")
+          .set(api_key)
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("name").and.to.equal(testSchool.name)
@@ -228,6 +243,7 @@ describe("School", function() {
       .then(function(initialDocCount) {
         agent
           .delete("/schools/Test_University")
+          .set(api_key)
           .then(function(res) {
             res.should.have.status(200)
             School.estimatedDocumentCount()

@@ -13,7 +13,7 @@ describe("Courses", function() {
 
   // API Key Variable
   let api_key = {
-    "Authorization": "Api-Key 7310601efbd0bfae"
+    "Authorization": "Api-Key " + process.env.API_KEY
   }
 
   // School for Tests
