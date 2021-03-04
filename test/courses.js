@@ -447,6 +447,7 @@ describe("Courses", function() {
   })
 
   after(function() {
+    School.deleteMany(testSchool)
     Course.deleteMany(testCourse)
     Course.deleteMany(secondCourse)
   })

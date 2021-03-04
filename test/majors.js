@@ -2,14 +2,23 @@ const app = require("../server")
 const chai = require("chai")
 const chaiHttp = require("chai-http")
 
-const Course = require("../src/models/course")
+const School = require("../src/models/school")
 const Major = require("../src/models/major")
+const Course = require("../src/models/course")
 
 chai.should()
 chai.use(chaiHttp)
 
 describe("Majors", function() {
   const agent = chai.request.agent(app)
+
+  // School for Tests
+  let testSchool = {
+    name: "Test University",
+    city: "Test Francisco",
+    state: "North Testkota",
+    country: "United Tests of America"
+  }
 
   // Major for Tests
   let testMajor = {
@@ -27,17 +36,22 @@ describe("Majors", function() {
   }
 
   before(function() {
+    School.deleteMany(testSchool)
+    Major.deleteMany(testMajor)
+    Course.deleteMany(testCourse)
+
     const course = new Course(testCourse)
     course.save()
 
-    Major.deleteMany(testMajor)
+    const school = new School(testSchool)
+    school.save()
   })
 
-  it("should create new major with valid attributes at POST /majors/new", function(done) {
+  it("should create new major with valid attributes at POST /schools/Test_University/majors/new", function(done) {
     Major.estimatedDocumentCount()
       .then(function(initialDocCount) {
         agent
-          .post("/majors/new")
+          .post("/schools/Test_University/majors/new")
           .send(testMajor)
           .then(function (res) {
             res.status.should.equal(200)
@@ -60,9 +74,9 @@ describe("Majors", function() {
       })
   })
 
-  it("should receive major attributes at GET /majors/BS_Test", function(done) {
+  it("should receive major attributes at GET /schools/Test_University/majors/BS_Test", function(done) {
     agent
-      .get("/majors/BS_Test")
+      .get("/schools/Test_University/majors/BS_Test")
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -74,10 +88,10 @@ describe("Majors", function() {
       })
   })
 
-  it("should update major type at PATCH /majors/BS_Test/edit_type", function(done) {
+  it("should update major type at PATCH /schools/Test_University/majors/BS_Test/edit_type", function(done) {
     testMajor.type = "BA"
     agent
-      .patch("/majors/BS_Test/edit_type")
+      .patch("/schools/Test_University/majors/BS_Test/edit_type")
       .send({type: testMajor.type})
       .then(function(res) {
         res.status.should.equal(200)
@@ -100,17 +114,17 @@ describe("Majors", function() {
       })
   })
 
-  it("should update major name at PATCH /majors/BS_Test/edit_name", function(done) {
+  it("should update major name at PATCH /schools/Test_University/majors/BS_Test/edit_name", function(done) {
     testMajor.name = "test"
     agent
-      .patch("/majors/BA_Test/edit_type")
+      .patch("/schools/Test_University/majors/BA_Test/edit_type")
       .send({name: testMajor.name})
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("type").and.to.equal(testMajor.type)
         res.body.should.have.property("name").and.to.equal(testMajor.name)
         agent
-          .get("/majors/BA_test")
+          .get("/schools/Test_University/majors/BA_test")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -126,20 +140,20 @@ describe("Majors", function() {
       })
   })
 
-  it("should update major attributes at PUT /majors/BS_Test", function(done) {
+  it("should update major attributes at PUT /schools/Test_University/majors/BS_Test", function(done) {
     testMajor = {
       type: "BS",
       name: "Test"
     }
     agent
-      .put("/majors/BA_test")
+      .put("/schools/Test_University/majors/BA_test")
       .send(testMajor)
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("type").and.to.equal(testMajor.type)
         res.body.should.have.property("name").and.to.equal(testMajor.name)
         agent
-          .get("/majors/BS_Test")
+          .get("/schools/Test_University/majors/BS_Test")
           .then(function(res) {
             res.status.should.equal(200)
             res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -155,9 +169,9 @@ describe("Majors", function() {
       })
   })
 
-  it("should add course to major at PATCH /majors/BS_Test/add_course_requirement/TST_101", function(done) {
+  it("should add course to major at PATCH /schools/Test_University/majors/BS_Test/add_course_requirement/TST_101", function(done) {
     agent
-      .patch("/majors/BS_Test/add_course_requirement/TST_101")
+      .patch("/schools/Test_University/majors/BS_Test/add_course_requirement/TST_101")
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -170,9 +184,9 @@ describe("Majors", function() {
     })
   })
 
-  it("should delete course from major at PATCH /majors/BS_Test/delete_course_requirement/TST_101", function(done) {
+  it("should delete course from major at PATCH /schools/Test_University/majors/BS_Test/delete_course_requirement/TST_101", function(done) {
     agent
-      .patch("/majors/BS_Test/delete_course_requirement/TST_101")
+      .patch("/schools/Test_University/majors/BS_Test/delete_course_requirement/TST_101")
       .then(function(res) {
         res.status.should.equal(200)
         res.body.should.have.property("type").and.to.equal(testMajor.type)
@@ -185,11 +199,11 @@ describe("Majors", function() {
     })
   })
 
-  it("should delete major at DELETE /majors/BS_Test", function(done) {
+  it("should delete major at DELETE /schools/Test_University/majors/BS_Test", function(done) {
     Major.estimatedDocumentCount()
       .then(function(initialDocCount) {
         agent
-          .delete("/majors/BS_Test")
+          .delete("/schools/Test_University/majors/BS_Test")
           .then(function(res) {
             res.should.have.status(200)
             Major.estimatedDocumentCount()
@@ -211,6 +225,7 @@ describe("Majors", function() {
   })
 
   after(function() {
+    School.deleteMany(testSchool)
     Major.deleteMany(testMajor)
     Course.deleteMany(testCourse)
   })
