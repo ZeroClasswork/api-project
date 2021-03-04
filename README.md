@@ -1,5 +1,22 @@
 # Course Overload API
 
+## How To
+
+- [ ] clone this repo
+- [ ] start the server with environment variables
+  - [ ] PORT (e.g. 3000)
+  - [ ] ALGORITHM (e.g. sha256)
+  - [ ] API_KEY (will be generated in following steps)
+- [ ] send a POST request to localhost:<PORT>/users/new
+  - [ ] include a form body with an email key
+  - [ ] get the api key in the response
+  - [ ] if you need to regenerate your api key with the same email, send a PATCH request to localhost:<PORT>/users/me/regenerate_key
+    - [ ] be sure to include the email key form body
+- [ ] update your API_KEY environment variable
+- [ ] run `npm test` to run tests
+- [ ] run `npm start` to utilize the api yourself
+  - [ ] you'll have to include the header `Authorization: Api-Key <API_KEY>` in your API calls
+
 ## Pitch
 
 I want to write an API that catalogs the courses available at universities. People with access to private university catalogs will be able to contribute. I want to use this information for a front end project that will help people organize the courses they want with attention paid to prerequisites and things like that. I want to be able use my web scraper project in BEW 2.5 to import data from this project.
@@ -8,7 +25,6 @@ I want to write an API that catalogs the courses available at universities. Peop
 University - name, majors, courses_offered
 Major - name, university, courses_required
 Courses - university, department, code, name, description, units, prerequisites, corequisites, postrequisites (courses that have this course as a pre or corequisite)
-
 ## Plan
 
 ### Setup
