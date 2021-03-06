@@ -1,0 +1,594 @@
+FORMAT: 1A
+HOST: https://localhost:3000
+
+# CourseOverload API
+
+CourseOverload is a CRUD API allowing consumers to schools and the majors and courses within them.
+
+## Getting Started
+
+- clone the repo
+- start the server with environment variables
+  - PORT (e.g. 3000)
+  - ALGORITHM (e.g. sha256)
+  - API_KEY (will be generated in following steps)
+- send a POST request to localhost:<PORT>/users/new
+  - include a form body with an email key
+  - get the api key in the response
+  - if you need to regenerate your api key with the same email, send a PATCH request to localhost:<PORT>/users/me/regenerate_key
+    - be sure to include the email key form body
+- update your API_KEY environment variable
+- run `npm test` to run tests
+- run `npm start` to utilize the api yourself
+  - you'll have to include the header `Authorization: Api-Key <API_KEY>` in your API calls
+
+## School Creation [/schools/new]
+
+### Create a New School [POST]
+
+You may create your own school using this action. It takes a JSON
+object containing a school's name, city, state, and country.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+    
+    + Body
+    
+            {
+                name: "Sample University", 
+                city: "Sample City", 
+                state: "Sample State", 
+                country: "Sample Country"
+            }
+
++ Response 200 (application/json)
+
+
+    + Body
+
+            {
+                "majors": [],
+                "courses": [],
+                "_id": "6042ea9787b6f64dcd2deced",
+                "name": "Sample University",
+                "city": "Sample City",
+                "state": "Sample State",
+                "country": "Sample Country",
+                "__v": 0
+            }
+            
+## School View / Batch Edit / DELETE [/schools/{school_name}]
+
++ Parameters
+    + school_name (string) - name of the school, replacing the spaces with underscores
+
+### View an Existing School [GET]
+
+You may view an existing school using this action.  
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "majors": [],
+                "courses": [],
+                "_id": "6042ea9787b6f64dcd2deced",
+                "name": "Sample University",
+                "city": "Sample City",
+                "state": "Sample State",
+                "country": "Sample Country",
+                "__v": 0
+            }
+            
+### Batch Edit an Existing School [PUT]
+
+You may edit an existing school using this action.  
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+            
+    + Body
+    
+            {
+                name: "New Name University",
+                city: "New City",
+                state: "New State",
+                country: "New Country",
+            }
+
++ Response 201 (application/json)
+
+    + Body
+    
+            {
+                "majors": [],
+                "courses": [],
+                "_id": "6042ea9787b6f64dcd2deced",
+                "name": "New Name University",
+                "city": "New City",
+                "state": "New State",
+                "country": "New Country",
+                "__v": 0
+            } 
+            
+### Delete an Existing School [DELETE]
+
+You may delete an existing school using this action.  
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+
++ Response 200
+
+## School Edit Attribute [/schools/{school_name}/edit_{attribute}]
+
++ Parameters
+    + school_name (string) - name of the school, replacing the spaces with underscores
+    + attribute (string) - attribute you want to edit
+
+### Edit an Existing School's Attribute [PATCH]
+
+You may edit an existing school's given attribute using this action.  
+
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+    
+    + Body
+    
+            {
+                name: "New Name University"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "majors": [],
+                "courses": [],
+                "_id": "6042ea9787b6f64dcd2deced",
+                "name": "Sample University",
+                "city": "Sample City",
+                "state": "Sample State",
+                "country": "Sample Country",
+                "__v": 0
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Major Creation [/schools/{school_name}/majors/new]
+
++ Parameters
+    + school_name (string) - name of the school, replacing the spaces with underscores
+
+
+### Create a New Major [POST]
+
+You may create your own major using this action. It takes a JSON object containing a major's type and name.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+    
+    + Body
+    
+            {
+                name: "BS", 
+                city: "Sample"
+            }
+
++ Response 200 (application/json)
+
+
+    + Body
+
+            {
+                "courses_required": [],
+                "_id": "5042cc9543b6f64dcd2d342e",
+                "type": "BS",
+                "name": "Sample",
+                "__v": 0
+            }
+            
+## Major View / Batch Edit / Delete [/schools/{school_name}/majors/{major_name}]
+
++ Parameters
+    + school_name (string) - name of the school, replacing the spaces with underscores
+    + major_name (string) - type of major, underscore, name of major
+
+### View an Existing Major [GET]
+
+You may view an existing major using this action.  
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "courses_required": [],
+                "_id": "5042cc9543b6f64dcd2d342e",
+                "type": "BS",
+                "name": "Sample",
+                "__v": 0
+            }
+            
+### Batch Edit an Existing School [PUT]
+
+You may edit an existing school using this action.  
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+            
+    + Body
+    
+            {
+                type: "BA",
+                name: "Example"
+            }
+
++ Response 201 (application/json)
+
+    + Body
+    
+            {
+                "courses_required": [],
+                "_id": "5042cc9543b6f64dcd2d342e",
+                "type": "BA",
+                "name": "Example",
+                "__v": 0
+            } 
+            
+### Delete an Existing School [DELETE]
+
+You may delete an existing school using this action.  
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+
++ Response 200
+
+## Major Edit Attribute [/schools/{school_name}/majors/{major_name}/edit_{attribute}]
+
++ Parameters
+    + school_name (string) - name of the school, replacing the spaces with underscores
+    + major_name (string) - type of major, underscore, name of major
+    + attribute (string) - attribute you want to edit
+
+### Edit an Existing Major's Attribute [PATCH]
+
+You may edit an existing major's given attribute using this action.  
+
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+    
+    + Body
+    
+            {
+                name: "Sample2"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "courses_required": [],
+                "_id": "5042cc9543b6f64dcd2d342e",
+                "type": "BA",
+                "name": "Sample2",
+                "__v": 0
+            } 
+
+## Major Course Association [/schools/{school_name}/majors/{major_name}/{action}_course_requirement/{course_name}]
+
++ Parameters
+    + school_name (string) - name of the school, replacing the spaces with underscores
+    + major_name (string) - type of major, underscore, name of major
+    + action (string) - "add" or "delete"
+    + course_name (string) - department of course, underscore, code of course
+    
+### Create / Delete a New Major Course Association [PATCH]
+
+You may assocate or disassociate a course to a major using this action.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+
++ Response 200 (application/json)
+
+
+    + Body
+
+            {
+                "courses_required": ["6042f4d5a645145be1ce7f1c"],
+                "_id": "5042cc9543b6f64dcd2d342e",
+                "type": "BS",
+                "name": "Sample",
+                "__v": 0
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+## Course Creation [/schools/{school_name}/courses/new]
+
++ Parameters
+    + school_name (string) - name of the school, replacing the spaces with underscores
+
+### Create a New Course [PATCH]
+
+You may create your own course using this action. It takes a JSON
+object containing a course's department, code, name, description, units.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+    
+    + Body
+    
+            {
+                department: "SAM",
+                code: "101",
+                name: "Introduction to Samples",
+                description: "Lorem ipsum sum sum blah blah", 
+                units: 3
+            }
+
++ Response 200 (application/json)
+
+
+    + Body
+
+            {
+                "prerequisites": [],
+                "corequisites": [],
+                "postrequisites": [],
+                "_id": "6042f4d5a645145be1ce7f1c",
+                "department": "SAM",
+                "code": "101",
+                "name": "Introduction to Samples",
+                "description": "Lorem ipsum sum sum blah blah",
+                "units": 3,
+                "school": "6042ea9787b6f64dcd2deced",
+                "__v": 0
+            }
+            
+## Course View / Batch Edit / Delete [/schools/{school_name}/courses/{course_name}]
+
++ Parameters
+    + school_name (string) - name of the school, replacing the spaces with underscores
+    + course_name (string) - department of course, underscore, code of course
+
+### View an Existing Major [GET]
+
+You may view an existing major using this action.  
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "prerequisites": [],
+                "corequisites": [],
+                "postrequisites": [],
+                "_id": "6042f4d5a645145be1ce7f1c",
+                "department": "SAM",
+                "code": "101",
+                "name": "Introduction to Samples",
+                "description": "Lorem ipsum sum sum blah blah",
+                "units": 3,
+                "school": "6042ea9787b6f64dcd2deced",
+                "__v": 0
+            }
+            
+### Batch Edit an Existing School [PUT]
+
+You may edit an existing school using this action.  
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+            
+    + Body
+    
+            {
+                department: "EXA",
+                code: "1.1",
+                name: "Introduction to Examples",
+                description: "Lorem Mupsi sum sum blah blah", 
+                units: 5
+            }
+
++ Response 201 (application/json)
+
+    + Body
+    
+            {
+                "prerequisites": [],
+                "corequisites": [],
+                "postrequisites": [],
+                "_id": "6042f4d5a645145be1ce7f1c",
+                "department": "EXA",
+                "code": "1.1",
+                "name": "Introduction to Examples",
+                "description": "Lorem Mupsi sum sum blah blah",
+                "units": 5,
+                "school": "6042ea9787b6f64dcd2deced",
+                "__v": 0
+            } 
+            
+### Delete an Existing School [DELETE]
+
+You may delete an existing school using this action.  
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+
++ Response 200
+
+## Course Edit Attribute [/schools/{school_name}/majors/{course_name}/edit_{attribute}]
+
++ Parameters
+    + school_name (string) - name of the school, replacing the spaces with underscores
+    + course_name (string) - typeof major, underscore, name of major
+    + attribute (string) - attribute you want to edit
+
+### Edit an Existing Major's Attribute [PATCH]
+
+You may edit an existing major's given attribute using this action.  
+
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+    
+    + Body
+    
+            {
+                name: "Sample2"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "prerequisites": [],
+                "corequisites": [],
+                "postrequisites": [],
+                "_id": "6042f4d5a645145be1ce7f1c",
+                "department": "EXA",
+                "code": "1.1",
+                "name": "Sample2",
+                "description": "Lorem Mupsi sum sum blah blah",
+                "units": 5,
+                "school": "6042ea9787b6f64dcd2deced",
+                "__v": 0
+            } 
+
+
+## Course Course Association [/schools/{school_name}/courses/{course1_name}/{action}_{relationship}/{course2_name}]
+
++ Parameters
+    + school_name (string) - name of the school, replacing the spaces with underscores
+    + course1_name (string) - department of the course gaining the primary association, underscore, code of the course gaining the primary association
+    + action (string) - "add" or "delete"
+    + relationship (string) - "prerequisite" or "corequisite"
+    + course2_name (string) - department of the course being associated with course1, underscore, code of the course being associated with course1
+    
+### Create / Delete a New Major Course Association [PATCH]
+
+You may assocate or disassociate a course to a course (pre-/corequisites) using this action.
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Api-Key <your key here>
+
++ Response 200 (application/json)
+
+
+    + Body
+
+            {
+                "prerequisites": ["6042f4d5a645145be1ce7f1d"],
+                "corequisites": [],
+                "postrequisites": [],
+                "_id": "6042f4d5a645145be1ce7f1c",
+                "department": "EXA",
+                "code": "1.1",
+                "name": "Sample2",
+                "description": "Lorem Mupsi sum sum blah blah",
+                "units": 5,
+                "school": "6042ea9787b6f64dcd2deced",
+                "__v": 0
+            }
