@@ -17,6 +17,11 @@
 - [ ] run `npm start` to utilize the api yourself
   - [ ] you'll have to include the header `Authorization: Api-Key <API_KEY>` in your API calls
 
+
+## Documentation
+
+Check out [my docs](https://courseoverloadapi.docs.apiary.io/)!
+
 ## Pitch
 
 I want to write an API that catalogs the courses available at universities. People with access to private university catalogs will be able to contribute. I want to use this information for a front end project that will help people organize the courses they want with attention paid to prerequisites and things like that. I want to be able use my web scraper project in BEW 2.5 to import data from this project.
